@@ -1,5 +1,7 @@
 package com.mariuszilinskas.vsp.contentservice.enums;
 
+import com.mariuszilinskas.vsp.contentservice.util.ContentUtils;
+
 public enum Tag {
     FEATURED,
     NEW_RELEASE,
@@ -24,11 +26,6 @@ public enum Tag {
 
     @Override
     public String toString() {
-        String[] words = name().toLowerCase().split("_");
-        StringBuilder result = new StringBuilder();
-        for (String word : words) {
-            result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
-        }
-        return result.toString().trim();
+        return ContentUtils.convertEnumToString(this);
     }
 }
