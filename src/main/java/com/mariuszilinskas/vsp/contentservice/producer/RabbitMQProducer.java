@@ -1,6 +1,6 @@
 package com.mariuszilinskas.vsp.contentservice.producer;
 
-import com.mariuszilinskas.vsp.contentservice.dto.MediaRequest;
+import com.mariuszilinskas.vsp.contentservice.dto.MediaESRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class RabbitMQProducer {
     @Value("${rabbitmq.routing-keys.delete-content}")
     private String deleteContentRoutingKey;
 
-    public void sendAddUpdateContentMessage(MediaRequest request) {
+    public void sendAddUpdateContentMessage(MediaESRequest request) {
         logger.info("Sending message to add/update media content data [title: {}]", request.title());
         rabbitTemplate.convertAndSend(exchange, addUpdateContentRoutingKey, request);
     }

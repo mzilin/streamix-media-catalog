@@ -3,7 +3,7 @@ package com.mariuszilinskas.vsp.contentservice.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-public record MediaRequest(
+public record MediaESRequest(
         String contentId,
         String title,
         String type,
