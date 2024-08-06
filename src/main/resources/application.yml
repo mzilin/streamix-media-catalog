@@ -22,6 +22,11 @@ spring:
   data:
     mongodb:
       uri: ${MONGO_DB_URI}
+  rabbitmq:
+    host: ${RMQ_HOST}
+    port: ${RMQ_PORT}
+    username: ${RMQ_USERNAME}
+    password: ${RMQ_PASSWORD}
 
 # Eureka configuration
 eureka:
@@ -32,6 +37,13 @@ eureka:
       defaultZone: ${EUREKA_CLIENT_DEFAULT_ZONE}
   instance:
     preferIpAddress: true
+
+# RabbitMQ settings
+rabbitmq:
+  exchange: ${RMQ_EXCHANGE}
+  routing-keys:
+    add-update-content: ${RMQ_ADD_UPDATE_CONTENT_RK}
+    delete-content: ${RMQ_DELETE_CONTENT_RK}
 
 # Management properties
 management:
