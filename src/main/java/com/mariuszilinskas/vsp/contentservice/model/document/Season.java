@@ -23,4 +23,7 @@ public class Season {
     @Field("poster")
     private String poster;
 
+    @Field("rating")
+    private Double rating;
+
 }
