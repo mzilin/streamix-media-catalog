@@ -24,6 +24,6 @@ public class Season {
     private String poster;
 
     @Field("rating")
-    private Double rating;
+    private Double rating = 0.0;
 
 }

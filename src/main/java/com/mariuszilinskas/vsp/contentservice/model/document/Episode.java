@@ -35,7 +35,7 @@ public class Episode {
     private LocalDate releaseDate;
 
     @Field("rating")
-    private Double rating;
+    private Double rating = 0.0;
 
     @Field("duration")
     private Integer duration; // duration in minutes

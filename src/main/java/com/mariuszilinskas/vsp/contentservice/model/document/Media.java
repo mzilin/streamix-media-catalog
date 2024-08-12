@@ -46,7 +46,7 @@ public class Media {
 
     @Indexed
     @Field("rating")
-    private Double rating;
+    private Double rating = 0.0;
 
     @Indexed
     @Field("genres")
