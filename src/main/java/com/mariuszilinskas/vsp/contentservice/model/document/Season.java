@@ -20,10 +20,10 @@ public class Season {
     @Field("seasonNumber")
     private int seasonNumber;
 
-    @Field("poster")
-    private String poster;
-
     @Field("rating")
     private Double rating = 0.0;
+
+    @Field("poster")
+    private String poster;
 
 }
