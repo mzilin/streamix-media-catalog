@@ -1,6 +1,5 @@
 package com.mariuszilinskas.vsp.contentservice.model.document;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Document(collection = "people")
-public class People {
+public class Person {
 
     @MongoId
     private String id;
