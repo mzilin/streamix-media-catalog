@@ -79,7 +79,6 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
         mediaAdminService.updateSeriesSeasonCount(seriesId, currentSeasonCount - 1);
 
         episodeAdminService.removeAllEpisodesFromSeason(seriesId, id);
-
     }
 
     @Override
