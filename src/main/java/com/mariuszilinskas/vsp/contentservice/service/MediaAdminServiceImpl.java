@@ -28,6 +28,7 @@ public class MediaAdminServiceImpl implements MediaAdminService {
 
     private static final Logger logger = LoggerFactory.getLogger(MediaAdminServiceImpl.class);
     private final MediaRepository mediaRepository;
+    private final SeasonAdminService seasonAdminService;
 
     @Override
     @Transactional
@@ -109,6 +110,17 @@ public class MediaAdminServiceImpl implements MediaAdminService {
         return series;
     }
 
+    @Override
+    @Transactional
+    public Series updateSeriesSeasonCount(String mediaId, int seasonCount) {
+        logger.info("Updating Series [id: '{}'] season count to: '{}'", mediaId, seasonCount);
+
+        Series series = (Series) findMediaById(mediaId);
+        series.setSeasonCount(seasonCount);
+
+        return mediaRepository.save(series);
+    }
+
     private Series applySeriesUpdates(Series series, SeriesRequest request) {
         applyCommonMediaUpdates(series, request.commonMediaAttributes());
         series.setCreators(request.creators());
@@ -135,6 +147,7 @@ public class MediaAdminServiceImpl implements MediaAdminService {
     public void removeSeriesById(String mediaId) {
         logger.info("Removing Series [id: '{}']", mediaId);
         mediaRepository.deleteById(mediaId);
+        seasonAdminService.removeAllSeasonsFromSeries(mediaId);
 
         // TODO: rabbitMQ send request to search service
     }
