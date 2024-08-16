@@ -30,26 +30,25 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
     public Season createSeasonForSeries(String seriesId, SeasonRequest request) {
         logger.info("Creating new Season [number: '{}'] for Series [id: '{}']", request.seasonNumber(), seriesId);
 
-        Season newSeason = populateNewSeasonWithRequestData(request);
-        newSeason.setSeriesId(seriesId);
-
+        Season newSeason = populateNewSeasonWithRequestData(seriesId, request);
         int currentSeasonCount = getSeasonCountForSeries(seriesId);
         mediaAdminService.updateSeriesSeasonCount(seriesId, currentSeasonCount + 1);
 
         return newSeason;
     }
 
-    private Season populateNewSeasonWithRequestData(SeasonRequest request) {
+    private Season populateNewSeasonWithRequestData(String seriesId, SeasonRequest request) {
         Season season = new Season();
+        season.setSeriesId(seriesId);
         return applySeasonUpdates(season, request);
     }
 
     @Override
     @Transactional
-    public Season updateSeasonInSeries(String seriesId, int seasonNumber, SeasonRequest request) {
-        logger.info("Updating new Season [number: '{}'] for Series [id: '{}']", request.seasonNumber(), seriesId);
+    public Season updateSeasonInSeries(String seriesId, String id, SeasonRequest request) {
+        logger.info("Updating new Season [id: '{}'] for Series [id: '{}']", id, seriesId);
 
-        Season season = findSeasonBySeriesIdAndSeasonNumber(seriesId, seasonNumber);
+        Season season = findSeasonBySeriesIdAndSeasonId(seriesId, id);
         return applySeasonUpdates(season, request);
     }
 
@@ -62,10 +61,10 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
 
     @Override
     @Transactional
-    public Season updateSeasonEpisodeCount(String seriesId, int seasonNumber, int episodeCount) {
-        logger.info("Updating Series [id: '{}'] Season [number '{}'] episode count to: '{}'", seriesId, seasonNumber, episodeCount);
+    public Season updateSeasonEpisodeCount(String seriesId, String id, int episodeCount) {
+        logger.info("Updating Series [id: '{}'] Season [id '{}'] episode count to: '{}'", seriesId, id, episodeCount);
 
-        Season season = findSeasonBySeriesIdAndSeasonNumber(seriesId, seasonNumber);
+        Season season = findSeasonBySeriesIdAndSeasonId(seriesId, id);
         season.setEpisodeCount(episodeCount);
 
         return seasonRepository.save(season);
@@ -73,13 +72,13 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
 
     @Override
     @Transactional
-    public void removeSeasonFromSeries(String seriesId, int seasonNumber) {
-        logger.info("Removing Season [number '{}'] from Series [id: '{}']", seasonNumber, seriesId);
+    public void removeSeasonFromSeries(String seriesId, String id) {
+        logger.info("Removing Season [id '{}'] from Series [id: '{}']", id, seriesId);
 
         int currentSeasonCount = getSeasonCountForSeries(seriesId);
         mediaAdminService.updateSeriesSeasonCount(seriesId, currentSeasonCount - 1);
 
-        episodeAdminService.removeAllEpisodesFromSeason(seriesId, seasonNumber);
+        episodeAdminService.removeAllEpisodesFromSeason(seriesId, id);
 
     }
 
@@ -94,9 +93,9 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
 
     // --------------------------------------
 
-    private Season findSeasonBySeriesIdAndSeasonNumber(String seriesId, int seasonNumber) {
-        return seasonRepository.findBySeriesIdAndSeasonNumber(seriesId, seasonNumber)
-                .orElseThrow(() -> new ResourceNotFoundException(Season.class, "seriesId", seriesId));
+    private Season findSeasonBySeriesIdAndSeasonId(String seriesId, String id) {
+        return seasonRepository.findByIdAndSeriesId(id, seriesId)
+                .orElseThrow(() -> new ResourceNotFoundException(Season.class, "id", id));
     }
 
     private int getSeasonCountForSeries(String seriesId) {
