@@ -9,18 +9,20 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record SeriesRequest(
-        String title,
-        String description,
-        String type,
-        LocalDate releaseDate,
-        List<String> releaseCountries,
-        Double rating,
-        List<Genre> genres,
-        List<CastMember> cast,
-        List<CrewMember> creators,
-        List<CrewMember> crew,
-        List<String> availableCountries,
-        List<Tag> tags,
-        String poster,
-        String contentUrl
-) {}
+        MediaRequest commonMediaAttributes,
+        List<CrewMember> creators
+) {
+    public String title() { return commonMediaAttributes.title(); }
+    public String description() { return commonMediaAttributes.description(); }
+    public String type() { return commonMediaAttributes.type(); }
+    public LocalDate releaseDate() { return commonMediaAttributes.releaseDate(); }
+    public List<String> releaseCountries() { return commonMediaAttributes.releaseCountries(); }
+    public Double rating() { return commonMediaAttributes.rating(); }
+    public List<Genre> genres() { return commonMediaAttributes.genres(); }
+    public List<CastMember> cast() { return commonMediaAttributes.cast(); }
+    public List<CrewMember> crew() { return commonMediaAttributes.crew(); }
+    public List<String> availableCountries() { return commonMediaAttributes.availableCountries(); }
+    public List<Tag> tags() { return commonMediaAttributes.tags(); }
+    public String poster() { return commonMediaAttributes.poster(); }
+    public String contentUrl() { return commonMediaAttributes.contentUrl(); }
+}

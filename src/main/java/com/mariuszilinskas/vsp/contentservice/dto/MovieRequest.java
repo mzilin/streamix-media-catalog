@@ -9,20 +9,22 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record MovieRequest(
-        String title,
-        String description,
-        String type,
-        LocalDate releaseDate,
-        List<String> releaseCountries,
-        Double rating,
-        List<Genre> genres,
-        List<CastMember> cast,
+        MediaRequest mediaAttributes,
         List<CrewMember> directors,
         List<CrewMember> writers,
-        List<CrewMember> crew,
-        List<String> availableCountries,
-        Integer duration,
-        List<Tag> tags,
-        String poster,
-        String contentUrl
-) {}
+        Integer duration
+) {
+    public String title() { return mediaAttributes.title(); }
+    public String description() { return mediaAttributes.description(); }
+    public String type() { return mediaAttributes.type(); }
+    public LocalDate releaseDate() { return mediaAttributes.releaseDate(); }
+    public List<String> releaseCountries() { return mediaAttributes.releaseCountries(); }
+    public Double rating() { return mediaAttributes.rating(); }
+    public List<Genre> genres() { return mediaAttributes.genres(); }
+    public List<CastMember> cast() { return mediaAttributes.cast(); }
+    public List<CrewMember> crew() { return mediaAttributes.crew(); }
+    public List<String> availableCountries() { return mediaAttributes.availableCountries(); }
+    public List<Tag> tags() { return mediaAttributes.tags(); }
+    public String poster() { return mediaAttributes.poster(); }
+    public String contentUrl() { return mediaAttributes.contentUrl(); }
+}
