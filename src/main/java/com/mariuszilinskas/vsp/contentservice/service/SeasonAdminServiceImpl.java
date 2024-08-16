@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service implementation for managing season content, accessible only by system admins.
- * This service handles season creation, updates and deletion.
+ * Service implementation for managing series season content, accessible only by system admins.
+ * This service handles series season creation, updates and deletion.
  *
  * @author Marius Zilinskas
  */
