@@ -5,10 +5,10 @@ import com.mariuszilinskas.vsp.contentservice.model.document.Trailer;
 
 public interface TrailerAdminService {
 
-    Trailer createTrailer(TrailerRequest request);
+    Trailer createTrailer(String mediaId, TrailerRequest request);
 
-    Trailer updateTrailer(String id, TrailerRequest request);
+    Trailer updateTrailer(String id, String mediaId, TrailerRequest request);
 
-    void deleteTrailer(String id);
+    void deleteTrailer(String id, String mediaId);
 
 }
