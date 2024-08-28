@@ -3,6 +3,7 @@ package com.mariuszilinskas.vsp.contentservice.handler;
 
 import com.mariuszilinskas.vsp.contentservice.dto.ErrorResponse;
 import com.mariuszilinskas.vsp.contentservice.dto.FieldErrorResponse;
+import com.mariuszilinskas.vsp.contentservice.exception.EntityExistsException;
 import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,11 @@ public class ContentExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<ErrorResponse> handleEntityExistsException(EntityExistsException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
