@@ -1,6 +1,7 @@
 package com.mariuszilinskas.vsp.contentservice.service;
 
 import com.mariuszilinskas.vsp.contentservice.dto.EpisodeRequest;
+import com.mariuszilinskas.vsp.contentservice.exception.EntityExistsException;
 import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
 import com.mariuszilinskas.vsp.contentservice.model.document.Episode;
 import com.mariuszilinskas.vsp.contentservice.repository.EpisodeRepository;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * Service implementation for managing series episode content, accessible only by system admins.
@@ -29,6 +32,7 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
     public Episode createEpisodeInSeason(String seriesId, String seasonId, EpisodeRequest request) {
         logger.info("Creating new Episode [number: '{}'] for Season [id: '{}']", request.episodeNumber(), seasonId);
 
+        checkEpisodeNumberExists(seriesId, seasonId, request.episodeNumber());
         Episode newEpisode = populateNewEpisodeWithRequestData(seriesId, seasonId, request);
         int currentEpisodeCount = getEpisodeCountForSeason(seriesId, seasonId);
         seasonAdminService.updateSeasonEpisodeCount(seriesId, seasonId, currentEpisodeCount + 1);
@@ -48,7 +52,9 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
     public Episode updateEpisodeInSeason(String seriesId, String seasonId, String id, EpisodeRequest request) {
         logger.info("Updating new Episode [id: '{}'] for Season [id: '{}']", id, seasonId);
 
+        checkEpisodeNumberExistsExcludeId(seriesId, seasonId, request.episodeNumber(), id);
         Episode episode = findEpisodeBySeriesIdAndSeasonIdAndId(seriesId, seasonId, id);
+
         return applyEpisodeUpdates(episode, request);
     }
 
@@ -91,6 +97,20 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
     }
 
     // --------------------------------------
+
+    private void checkEpisodeNumberExists(String seriesId, String seasonId, int episodeNumber) {
+        if (episodeRepository.existsBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber)) {
+            throw new EntityExistsException(Episode.class, "episodeNumber", episodeNumber);
+        }
+
+    }
+
+    private void checkEpisodeNumberExistsExcludeId(String seriesId, String seasonId, int episodeNumber, String id) {
+        Optional<Episode> episode = episodeRepository.finBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
+        if (episode.isPresent() && !episode.get().getId().equals(id)) {
+            throw new EntityExistsException(Episode.class, "episodeNumber", episodeNumber);
+        }
+    }
 
     private Episode findEpisodeBySeriesIdAndSeasonIdAndId(String seriesId, String seasonId, String id) {
         return episodeRepository.findByIdAndSeriesIdAndSeasonId(id, seriesId, seasonId)

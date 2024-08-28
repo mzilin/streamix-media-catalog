@@ -9,6 +9,10 @@ import java.util.Optional;
 @Repository
 public interface EpisodeRepository extends MongoRepository<Episode, String> {
 
+    boolean existsBySeriesIdAndSeasonIdAndEpisodeNumber(String seriesId, String seasonId, int episodeNumber);
+
+    Optional<Episode> finBySeriesIdAndSeasonIdAndEpisodeNumber(String seriesId, String seasonId, int episodeNumber);
+
     Optional<Episode> findByIdAndSeriesIdAndSeasonId(String id, String seriesId, String seasonId);
 
     int countBySeriesIdAndSeasonId(String seriesId, String seasonId);
@@ -16,5 +20,4 @@ public interface EpisodeRepository extends MongoRepository<Episode, String> {
     void deleteAllBySeriesIdAndSeasonId(String seriesId, String seasonId);
 
     void deleteAllBySeriesId(String seriesId);
-
 }

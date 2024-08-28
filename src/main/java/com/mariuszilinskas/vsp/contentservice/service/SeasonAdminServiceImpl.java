@@ -61,13 +61,14 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
 
     @Override
     @Transactional
-    public Season updateSeasonEpisodeCount(String seriesId, String id, int episodeCount) {
+    public int updateSeasonEpisodeCount(String seriesId, String id, int episodeCount) {
         logger.info("Updating Series [id: '{}'] Season [id '{}'] episode count to: '{}'", seriesId, id, episodeCount);
 
         Season season = findSeasonBySeriesIdAndSeasonId(seriesId, id);
         season.setEpisodeCount(episodeCount);
 
-        return seasonRepository.save(season);
+        seasonRepository.save(season);
+        return episodeCount;
     }
 
     @Override
