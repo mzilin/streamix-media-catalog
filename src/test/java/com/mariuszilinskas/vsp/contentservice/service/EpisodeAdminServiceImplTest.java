@@ -131,10 +131,31 @@ public class EpisodeAdminServiceImplTest {
     void testUpdateEpisodeInSeason() {
         // Arrange
 
-        // Act
 
-        // Assert
+    }
 
+    @Test
+    void testUpdateEpisodeInSeason_DuplicateEpisodeNumber() {
+        // Arrange
+        String newEpisodeId = "AnotherId";
+        Episode anotherEpisode = new Episode();
+        anotherEpisode.setId(newEpisodeId);
+        anotherEpisode.setSeriesId(seriesId);
+        anotherEpisode.setSeasonId(seasonId);
+        anotherEpisode.setEpisodeNumber(episodeRequest.episodeNumber());
+
+        when(episodeRepository.findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeRequest.episodeNumber()))
+                .thenReturn(Optional.of(episode));
+
+        // Act & Assert
+        assertThrows(EntityExistsException.class, () -> {
+            episodeAdminService.updateEpisodeInSeason(seriesId, seasonId, newEpisodeId, episodeRequest);
+        });
+
+        verify(episodeRepository, times(1)).findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeRequest.episodeNumber());
+
+        verify(episodeRepository, never()).findByIdAndSeriesIdAndSeasonId(anyString(), anyString(), anyString());
+        verify(episodeRepository, never()).save(any(Episode.class));
     }
 
     // ------------------------------------

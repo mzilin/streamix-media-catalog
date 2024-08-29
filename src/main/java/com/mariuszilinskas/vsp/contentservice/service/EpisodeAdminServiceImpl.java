@@ -106,7 +106,7 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
     }
 
     private void checkEpisodeNumberExistsExcludeId(String seriesId, String seasonId, int episodeNumber, String id) {
-        Optional<Episode> episode = episodeRepository.finBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
+        Optional<Episode> episode = episodeRepository.findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
         if (episode.isPresent() && !episode.get().getId().equals(id)) {
             throw new EntityExistsException(Episode.class, "episodeNumber", episodeNumber);
         }
