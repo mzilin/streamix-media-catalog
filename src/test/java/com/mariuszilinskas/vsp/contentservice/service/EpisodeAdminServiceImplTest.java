@@ -13,15 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.WeakHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +35,7 @@ public class EpisodeAdminServiceImplTest {
     private final String episodeId = "episode01";
     private final Episode episode = new Episode();
     private EpisodeRequest episodeRequest;
+    private EpisodeRequest updatedEpisodeRequest;
 
     // ------------------------------------
 
@@ -66,6 +61,17 @@ public class EpisodeAdminServiceImplTest {
                 episode.getDuration(),
                 episode.getThumbnail(),
                 episode.getContentUrl()
+        );
+
+        updatedEpisodeRequest = new EpisodeRequest(
+                episode.getEpisodeNumber(),
+                "Updated Title",
+                "Updated description",
+                episodeRequest.releaseDate(),
+                episodeRequest.rating(),
+                episodeRequest.duration(),
+                episodeRequest.thumbnail(),
+                episodeRequest.contentUrl()
         );
     }
 
@@ -129,30 +135,61 @@ public class EpisodeAdminServiceImplTest {
 
     @Test
     void testUpdateEpisodeInSeason() {
-        // Arrange
+        ArgumentCaptor<Episode> captor = ArgumentCaptor.forClass(Episode.class);
+        int episodeNumber = episodeRequest.episodeNumber();
 
+        Episode existingEpisode = new Episode();
+        existingEpisode.setId(episodeId);
+        existingEpisode.setSeriesId(seriesId);
+        existingEpisode.setSeasonId(seasonId);
 
+        when(episodeRepository.findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber))
+                .thenReturn(Optional.of(episode));
+        when(episodeRepository.findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId))
+                .thenReturn(Optional.of(existingEpisode));
+        when(episodeRepository.save(captor.capture())).thenReturn(existingEpisode);
+
+        // Act
+        episodeAdminService.updateEpisodeInSeason(seriesId, seasonId, episodeId, updatedEpisodeRequest);
+
+        // Assert
+        verify(episodeRepository, times(1)).findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
+        verify(episodeRepository, times(1)).findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId);
+        verify(episodeRepository, times(1)).save(captor.capture());
+
+        Episode savedEpisode = captor.getValue();
+        assertEquals(episodeId, savedEpisode.getId());
+        assertEquals(seriesId, savedEpisode.getSeriesId());
+        assertEquals(seasonId, savedEpisode.getSeasonId());
+        assertEquals(updatedEpisodeRequest.episodeNumber(), savedEpisode.getEpisodeNumber());
+        assertEquals(updatedEpisodeRequest.title(), savedEpisode.getTitle());
+        assertEquals(updatedEpisodeRequest.description(), savedEpisode.getDescription());
+        assertEquals(updatedEpisodeRequest.releaseDate(), savedEpisode.getReleaseDate());
+        assertEquals(updatedEpisodeRequest.rating(), savedEpisode.getRating());
+        assertEquals(updatedEpisodeRequest.duration(), savedEpisode.getDuration());
+        assertEquals(updatedEpisodeRequest.thumbnail(), savedEpisode.getThumbnail());
+        assertEquals(updatedEpisodeRequest.contentUrl(), savedEpisode.getContentUrl());
     }
 
     @Test
     void testUpdateEpisodeInSeason_DuplicateEpisodeNumber() {
-        // Arrange
-        String newEpisodeId = "AnotherId";
-        Episode anotherEpisode = new Episode();
-        anotherEpisode.setId(newEpisodeId);
-        anotherEpisode.setSeriesId(seriesId);
-        anotherEpisode.setSeasonId(seasonId);
-        anotherEpisode.setEpisodeNumber(episodeRequest.episodeNumber());
+        int episodeNumber = episodeRequest.episodeNumber();
 
-        when(episodeRepository.findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeRequest.episodeNumber()))
-                .thenReturn(Optional.of(episode));
+        Episode existingEpisode = new Episode();
+        existingEpisode.setId("differentEpisodeId");
+        existingEpisode.setSeriesId(seriesId);
+        existingEpisode.setSeasonId(seasonId);
+        existingEpisode.setEpisodeNumber(episodeNumber);
+
+        when(episodeRepository.findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber))
+                .thenReturn(Optional.of(existingEpisode));
 
         // Act & Assert
         assertThrows(EntityExistsException.class, () -> {
-            episodeAdminService.updateEpisodeInSeason(seriesId, seasonId, newEpisodeId, episodeRequest);
+            episodeAdminService.updateEpisodeInSeason(seriesId, seasonId, episodeId, updatedEpisodeRequest);
         });
 
-        verify(episodeRepository, times(1)).findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeRequest.episodeNumber());
+        verify(episodeRepository, times(1)).findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
 
         verify(episodeRepository, never()).findByIdAndSeriesIdAndSeasonId(anyString(), anyString(), anyString());
         verify(episodeRepository, never()).save(any(Episode.class));
