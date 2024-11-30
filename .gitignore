@@ -39,3 +39,4 @@ out/
 ### Others ###
 .DS_Store
 env.properties
+_NOTES.txt
