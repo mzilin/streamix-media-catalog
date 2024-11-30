@@ -58,6 +58,20 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
         return applyEpisodeUpdates(episode, request);
     }
 
+    private void checkEpisodeNumberExists(String seriesId, String seasonId, int episodeNumber) {
+        if (episodeRepository.existsBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber)) {
+            throw new EntityExistsException(Episode.class, "episodeNumber", episodeNumber);
+        }
+
+    }
+
+    private void checkEpisodeNumberExistsExcludeId(String seriesId, String seasonId, int episodeNumber, String id) {
+        Optional<Episode> episode = episodeRepository.findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
+        if (episode.isPresent() && !episode.get().getId().equals(id)) {
+            throw new EntityExistsException(Episode.class, "episodeNumber", episodeNumber);
+        }
+    }
+
     private Episode applyEpisodeUpdates(Episode episode, EpisodeRequest request) {
         episode.setEpisodeNumber(request.episodeNumber());
         episode.setRating(request.rating());
@@ -76,10 +90,20 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
     public void removeEpisodeFromSeason(String seriesId, String seasonId, String id) {
         logger.info("Removing Episode [id '{}'] from Season [id: '{}']", id, seasonId);
 
+        Episode episode = findEpisodeBySeriesIdAndSeasonIdAndId(seriesId, seasonId, id);
         int currentEpisodeCount = getEpisodeCountForSeason(seriesId, seasonId);
         seasonAdminService.updateSeasonEpisodeCount(seriesId, seasonId, currentEpisodeCount - 1);
 
-        episodeRepository.deleteById(id);
+        episodeRepository.delete(episode);
+    }
+
+    private Episode findEpisodeBySeriesIdAndSeasonIdAndId(String seriesId, String seasonId, String id) {
+        return episodeRepository.findByIdAndSeriesIdAndSeasonId(id, seriesId, seasonId)
+                .orElseThrow(() -> new ResourceNotFoundException(Episode.class, "id", id));
+    }
+
+    private int getEpisodeCountForSeason(String seriesId, String seasonId) {
+        return episodeRepository.countBySeriesIdAndSeasonId(seriesId, seasonId);
     }
 
     @Override
@@ -94,31 +118,6 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
     public void removeAllEpisodesFromSeries(String seriesId) {
         logger.info("Removing all Episodes from Series [id: '{}']", seriesId);
         episodeRepository.deleteAllBySeriesId(seriesId);
-    }
-
-    // --------------------------------------
-
-    private void checkEpisodeNumberExists(String seriesId, String seasonId, int episodeNumber) {
-        if (episodeRepository.existsBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber)) {
-            throw new EntityExistsException(Episode.class, "episodeNumber", episodeNumber);
-        }
-
-    }
-
-    private void checkEpisodeNumberExistsExcludeId(String seriesId, String seasonId, int episodeNumber, String id) {
-        Optional<Episode> episode = episodeRepository.findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
-        if (episode.isPresent() && !episode.get().getId().equals(id)) {
-            throw new EntityExistsException(Episode.class, "episodeNumber", episodeNumber);
-        }
-    }
-
-    private Episode findEpisodeBySeriesIdAndSeasonIdAndId(String seriesId, String seasonId, String id) {
-        return episodeRepository.findByIdAndSeriesIdAndSeasonId(id, seriesId, seasonId)
-                .orElseThrow(() -> new ResourceNotFoundException(Episode.class, "id", id));
-    }
-
-    private int getEpisodeCountForSeason(String seriesId, String seasonId) {
-        return episodeRepository.countBySeriesIdAndSeasonId(seriesId, seasonId);
     }
 
 }
