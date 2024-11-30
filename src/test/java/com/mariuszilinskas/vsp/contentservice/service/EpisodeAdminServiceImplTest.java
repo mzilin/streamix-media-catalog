@@ -238,24 +238,22 @@ public class EpisodeAdminServiceImplTest {
 
     @Test
     void testRemoveAllEpisodesFromSeason() {
-        // Arrange
-
         // Act
+        episodeAdminService.removeAllEpisodesFromSeason(seriesId, seasonId);
 
         // Assert
-
+        verify(episodeRepository, times(1)).deleteAllBySeriesIdAndSeasonId(seriesId, seasonId);
     }
 
     // ------------------------------------
 
     @Test
     void testRemoveAllEpisodesFromSeries() {
-        // Arrange
-
         // Act
+        episodeAdminService.removeAllEpisodesFromSeries(seriesId);
 
         // Assert
-
+        verify(episodeRepository, times(1)).deleteAllBySeriesId(seriesId);
     }
 
 }
