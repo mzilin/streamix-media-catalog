@@ -2,6 +2,7 @@ package com.mariuszilinskas.vsp.contentservice.service;
 
 import com.mariuszilinskas.vsp.contentservice.dto.EpisodeRequest;
 import com.mariuszilinskas.vsp.contentservice.exception.EntityExistsException;
+import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
 import com.mariuszilinskas.vsp.contentservice.model.document.Episode;
 import com.mariuszilinskas.vsp.contentservice.repository.EpisodeRepository;
 import java.time.LocalDate;
@@ -200,11 +201,37 @@ public class EpisodeAdminServiceImplTest {
     @Test
     void testRemoveEpisodeFromSeason() {
         // Arrange
+        when(episodeRepository.findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId))
+                .thenReturn(Optional.of(episode));
+        when(episodeRepository.countBySeriesIdAndSeasonId(seriesId, seasonId)).thenReturn(1);
+        when(seasonAdminService.updateSeasonEpisodeCount(seriesId, seasonId, 0)).thenReturn(0);
 
         // Act
+        episodeAdminService.removeEpisodeFromSeason(seriesId, seasonId, episodeId);
 
         // Assert
+        verify(episodeRepository, times(1)).findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId);
+        verify(episodeRepository, times(1)).countBySeriesIdAndSeasonId(seriesId, seasonId);
+        verify(seasonAdminService, times(1)).updateSeasonEpisodeCount(seriesId, seasonId, 0);
+        verify(episodeRepository, times(1)).delete(any(Episode.class));
+    }
 
+    @Test
+    void testRemoveEpisodeFromSeason_EpisodeDoesntExist() {
+        // Arrange
+        when(episodeRepository.findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId))
+                .thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> {
+            episodeAdminService.removeEpisodeFromSeason(seriesId, seasonId, episodeId);
+        });
+
+        // Assert
+        verify(episodeRepository, times(1)).findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId);
+        verify(episodeRepository, never()).countBySeriesIdAndSeasonId(anyString(), anyString());
+        verify(seasonAdminService, never()).updateSeasonEpisodeCount(anyString(), anyString(), anyInt());
+        verify(episodeRepository, never()).delete(any(Episode.class));
     }
 
     // ------------------------------------
