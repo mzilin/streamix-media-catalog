@@ -13,7 +13,7 @@ public interface MediaAdminService {
 
     Series createSeries(SeriesRequest request);
     Series updateSeriesById(String mediaId, SeriesRequest request);
-    Series updateSeriesSeasonCount(String mediaId, int seasonCount);
+    int updateSeriesSeasonCount(String mediaId, int seasonCount);
     void removeSeriesById(String mediaId);
 
 }
