@@ -24,7 +24,7 @@ public class Trailer {
     private String description;
 
     @Field("duration")
-    private Integer duration; // duration in minutes
+    private Integer duration; // duration in seconds
 
     @Field("thumbnail")
     private String thumbnail;
