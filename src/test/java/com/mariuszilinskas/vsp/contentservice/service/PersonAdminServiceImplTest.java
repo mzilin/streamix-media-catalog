@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -145,19 +144,31 @@ public class PersonAdminServiceImplTest {
     @Test
     void testDeletePerson() {
         // Arrange
+        when(personRepository.findById(personId)).thenReturn(Optional.of(person));
+        doNothing().when(personRepository).delete(person);
 
         // Act
+        personAdminService.deletePerson(personId);
 
         // Assert
+        verify(personRepository, times(1)).findById(personId);
+        verify(personRepository, times(1)).delete(person);
     }
 
     @Test
     void testDeletePerson_PersonDoesntExist() {
         // Arrange
+        when(personRepository.findById(personId)).thenReturn(Optional.empty());
 
-        // Act
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> {
+            personAdminService.deletePerson(personId);
+        });
 
         // Assert
+        verify(personRepository, times(1)).findById(personId);
+
+        verify(personRepository, never()).delete(any(Person.class));
     }
 
 }
