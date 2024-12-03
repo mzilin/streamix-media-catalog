@@ -74,6 +74,11 @@ public class SeasonAdminServiceImplTest {
         verify(seasonRepository, times(1)).countBySeriesId(seriesId);
         verify(seasonRepository, times(1)).save(captor.capture());
         verify(mediaAdminService, times(1)).updateSeriesSeasonCount(seriesId, seasonNumber);
+
+        Season savedSeason = captor.getValue();
+        assertEquals(seriesId, savedSeason.getSeriesId());
+        assertEquals(request.rating(), savedSeason.getRating());
+        assertEquals(request.poster(), savedSeason.getPoster());
     }
 
     @Test
