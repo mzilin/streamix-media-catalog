@@ -1,5 +1,7 @@
 package com.mariuszilinskas.vsp.contentservice.service;
 
+import com.mariuszilinskas.vsp.contentservice.dto.SeasonRequest;
+import com.mariuszilinskas.vsp.contentservice.exception.EntityExistsException;
 import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
 import com.mariuszilinskas.vsp.contentservice.model.document.Season;
 import com.mariuszilinskas.vsp.contentservice.repository.SeasonRepository;
@@ -52,10 +54,47 @@ public class SeasonAdminServiceImplTest {
     @Test
     void testCreateSeasonForSeries() {
         // Arrange
+        ArgumentCaptor<Season> captor = ArgumentCaptor.forClass(Season.class);
+        int seasonNumber = 2;
+        SeasonRequest request = new SeasonRequest(seasonNumber, 9.0, "poster_url");
+
+        when(seasonRepository.existsBySeriesIdAndSeasonNumber(seriesId, seasonNumber)).thenReturn(false);
+        when(seasonRepository.countBySeriesId(seriesId)).thenReturn(1);
+        when(seasonRepository.save(captor.capture())).thenReturn(season);
+        when(mediaAdminService.updateSeriesSeasonCount(seriesId, 2)).thenReturn(seasonNumber);
 
         // Act
+        Season response = seasonAdminService.createSeasonForSeries(seriesId, request);
 
         // Assert
+        assertNotNull(request);
+        assertEquals(season.getId(), response.getId());
+
+        verify(seasonRepository, times(1)).existsBySeriesIdAndSeasonNumber(seriesId, seasonNumber);
+        verify(seasonRepository, times(1)).countBySeriesId(seriesId);
+        verify(seasonRepository, times(1)).save(captor.capture());
+        verify(mediaAdminService, times(1)).updateSeriesSeasonCount(seriesId, seasonNumber);
+    }
+
+    @Test
+    void testCreateSeasonForSeries_SeasonAlreadyExists() {
+        // Arrange
+        int seasonNumber = 1;
+        SeasonRequest request = new SeasonRequest(seasonNumber, 9.0, "poster_url");
+
+        when(seasonRepository.existsBySeriesIdAndSeasonNumber(seriesId, seasonNumber)).thenReturn(true);
+
+        // Act & Assert
+        assertThrows(EntityExistsException.class, () -> {
+            seasonAdminService.createSeasonForSeries(seriesId, request);
+        });
+
+        // Assert
+        verify(seasonRepository, times(1)).existsBySeriesIdAndSeasonNumber(seriesId, seasonNumber);
+
+        verify(seasonRepository, never()).countBySeriesId(seriesId);
+        verify(seasonRepository, never()).save(any(Season.class));
+        verify(mediaAdminService, never()).updateSeriesSeasonCount(seriesId, seasonNumber);
     }
 
     // ------------------------------------
@@ -143,6 +182,7 @@ public class SeasonAdminServiceImplTest {
 
         // Assert
         verify(seasonRepository, times(1)).findByIdAndSeriesId(seasonId, seriesId);
+
         verify(seasonRepository, never()).countBySeriesId(anyString());
         verify(mediaAdminService, never()).updateSeriesSeasonCount(anyString(), anyInt());
         verify(episodeAdminService, never()).removeAllEpisodesFromSeason(anyString(), anyString());
