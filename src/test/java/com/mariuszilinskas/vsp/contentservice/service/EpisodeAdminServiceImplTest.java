@@ -249,6 +249,9 @@ public class EpisodeAdminServiceImplTest {
 
     @Test
     void testRemoveAllEpisodesFromSeries() {
+        // Arrange
+        doNothing().when(episodeRepository).deleteAllBySeriesId(seriesId);
+
         // Act
         episodeAdminService.removeAllEpisodesFromSeries(seriesId);
 

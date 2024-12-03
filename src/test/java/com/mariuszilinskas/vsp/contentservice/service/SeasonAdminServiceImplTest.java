@@ -153,10 +153,15 @@ public class SeasonAdminServiceImplTest {
     @Test
     void testRemoveAllSeasonsFromSeries() {
         // Arrange
+        doNothing().when(seasonRepository).deleteBySeriesId(seriesId);
+        doNothing().when(episodeAdminService).removeAllEpisodesFromSeries(seriesId);
 
         // Act
+        seasonAdminService.removeAllSeasonsFromSeries(seriesId);
 
         // Assert
+        verify(seasonRepository, times(1)).deleteBySeriesId(seriesId);
+        verify(episodeAdminService, times(1)).removeAllEpisodesFromSeries(seriesId);
     }
 
 }
