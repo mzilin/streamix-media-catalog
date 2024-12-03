@@ -65,10 +65,11 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
         logger.info("Updating Series [id: '{}'] Season [id '{}'] episode count to: '{}'", seriesId, id, episodeCount);
 
         Season season = findSeasonBySeriesIdAndSeasonId(seriesId, id);
-        season.setEpisodeCount(episodeCount);
+        int newCount = Math.max(episodeCount, 0);
+        season.setEpisodeCount(newCount);
 
         seasonRepository.save(season);
-        return episodeCount;
+        return newCount;
     }
 
     @Override
@@ -76,10 +77,20 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
     public void removeSeasonFromSeries(String seriesId, String id) {
         logger.info("Removing Season [id '{}'] from Series [id: '{}']", id, seriesId);
 
+        findSeasonBySeriesIdAndSeasonId(seriesId, id);
         int currentSeasonCount = getSeasonCountForSeries(seriesId);
         mediaAdminService.updateSeriesSeasonCount(seriesId, currentSeasonCount - 1);
 
         episodeAdminService.removeAllEpisodesFromSeason(seriesId, id);
+    }
+
+    private Season findSeasonBySeriesIdAndSeasonId(String seriesId, String id) {
+        return seasonRepository.findByIdAndSeriesId(id, seriesId)
+                .orElseThrow(() -> new ResourceNotFoundException(Season.class, "id", id));
+    }
+
+    private int getSeasonCountForSeries(String seriesId) {
+        return seasonRepository.countBySeriesId(seriesId);
     }
 
     @Override
@@ -89,17 +100,6 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
 
         seasonRepository.deleteBySeriesId(seriesId);
         episodeAdminService.removeAllEpisodesFromSeries(seriesId);
-    }
-
-    // --------------------------------------
-
-    private Season findSeasonBySeriesIdAndSeasonId(String seriesId, String id) {
-        return seasonRepository.findByIdAndSeriesId(id, seriesId)
-                .orElseThrow(() -> new ResourceNotFoundException(Season.class, "id", id));
-    }
-
-    private int getSeasonCountForSeries(String seriesId) {
-        return seasonRepository.countBySeriesId(seriesId);
     }
 
 }
