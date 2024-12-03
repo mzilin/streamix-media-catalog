@@ -40,6 +40,12 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
         return newEpisode;
     }
 
+    private void checkEpisodeNumberExists(String seriesId, String seasonId, int episodeNumber) {
+        if (episodeRepository.existsBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber)) {
+            throw new EntityExistsException(Episode.class, "episodeNumber", episodeNumber);
+        }
+    }
+
     private Episode populateNewEpisodeWithRequestData(String seriesId, String seasonId, EpisodeRequest request) {
         Episode episode = new Episode();
         episode.setSeriesId(seriesId);
@@ -52,17 +58,10 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
     public Episode updateEpisodeInSeason(String seriesId, String seasonId, String id, EpisodeRequest request) {
         logger.info("Updating new Episode [id: '{}'] for Season [id: '{}']", id, seasonId);
 
-        checkEpisodeNumberExistsExcludeId(seriesId, seasonId, request.episodeNumber(), id);
         Episode episode = findEpisodeBySeriesIdAndSeasonIdAndId(seriesId, seasonId, id);
+        checkEpisodeNumberExistsExcludeId(seriesId, seasonId, request.episodeNumber(), id);
 
         return applyEpisodeUpdates(episode, request);
-    }
-
-    private void checkEpisodeNumberExists(String seriesId, String seasonId, int episodeNumber) {
-        if (episodeRepository.existsBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber)) {
-            throw new EntityExistsException(Episode.class, "episodeNumber", episodeNumber);
-        }
-
     }
 
     private void checkEpisodeNumberExistsExcludeId(String seriesId, String seasonId, int episodeNumber, String id) {

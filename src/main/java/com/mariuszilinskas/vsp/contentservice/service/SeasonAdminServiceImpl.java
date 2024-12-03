@@ -1,6 +1,7 @@
 package com.mariuszilinskas.vsp.contentservice.service;
 
 import com.mariuszilinskas.vsp.contentservice.dto.SeasonRequest;
+import com.mariuszilinskas.vsp.contentservice.exception.EntityExistsException;
 import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
 import com.mariuszilinskas.vsp.contentservice.model.document.Season;
 import com.mariuszilinskas.vsp.contentservice.repository.SeasonRepository;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * Service implementation for managing series season content, accessible only by system admins.
@@ -30,11 +33,18 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
     public Season createSeasonForSeries(String seriesId, SeasonRequest request) {
         logger.info("Creating new Season [number: '{}'] for Series [id: '{}']", request.seasonNumber(), seriesId);
 
+        checkSeasonNumberExists(seriesId, request.seasonNumber());
         Season newSeason = populateNewSeasonWithRequestData(seriesId, request);
         int currentSeasonCount = getSeasonCountForSeries(seriesId);
         mediaAdminService.updateSeriesSeasonCount(seriesId, currentSeasonCount + 1);
 
         return newSeason;
+    }
+
+    private void checkSeasonNumberExists(String seriesId, int seasonNumber) {
+        if (seasonRepository.existsBySeriesIdAndSeasonNumber(seriesId, seasonNumber)) {
+            throw new EntityExistsException(Season.class, "seasonNumber", seasonNumber);
+        }
     }
 
     private Season populateNewSeasonWithRequestData(String seriesId, SeasonRequest request) {
@@ -49,7 +59,16 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
         logger.info("Updating new Season [id: '{}'] for Series [id: '{}']", id, seriesId);
 
         Season season = findSeasonBySeriesIdAndSeasonId(seriesId, id);
+        checkSeasonNumberExistsExcludeId(seriesId, request.seasonNumber(), id);
+
         return applySeasonUpdates(season, request);
+    }
+
+    private void checkSeasonNumberExistsExcludeId(String seriesId, int seasonNumber, String id) {
+        Optional<Season> season = seasonRepository.findBySeriesIdAndSeasonNumber(seriesId, seasonNumber);
+        if (season.isPresent() && !season.get().getId().equals(id)) {
+            throw new EntityExistsException(Season.class, "seasonNumber", seasonNumber);
+        }
     }
 
     private Season applySeasonUpdates(Season season, SeasonRequest request) {
