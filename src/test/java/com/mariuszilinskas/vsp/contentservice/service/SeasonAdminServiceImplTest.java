@@ -102,10 +102,74 @@ public class SeasonAdminServiceImplTest {
     @Test
     void testUpdateSeasonInSeries() {
         // Arrange
+        ArgumentCaptor<Season> captor = ArgumentCaptor.forClass(Season.class);
+        int seasonNumber = 1;
+        SeasonRequest request = new SeasonRequest(seasonNumber, 9.0, "poster_url");
+
+        when(seasonRepository.findByIdAndSeriesId(seasonId, seriesId)).thenReturn(Optional.of(season));
+        when(seasonRepository.findBySeriesIdAndSeasonNumber(seriesId, seasonNumber)).thenReturn(Optional.of(season));
+        when(seasonRepository.save(captor.capture())).thenReturn(season);
 
         // Act
+        Season response = seasonAdminService.updateSeasonInSeries(seriesId, seasonId, request);
 
         // Assert
+        assertNotNull(response);
+        verify(seasonRepository, times(1)).findByIdAndSeriesId(seasonId, seriesId);
+        verify(seasonRepository, times(1)).findBySeriesIdAndSeasonNumber(seriesId, seasonNumber);
+        verify(seasonRepository, times(1)).save(captor.capture());
+
+        Season savedSeason = captor.getValue();
+        assertEquals(seasonId, savedSeason.getId());
+        assertEquals(seriesId, savedSeason.getSeriesId());
+        assertEquals(request.rating(), savedSeason.getRating());
+        assertEquals(request.poster(), savedSeason.getPoster());
+    }
+
+    @Test
+    void testUpdateSeasonInSeries_DuplicateSeasonNumber() {
+        // Arrange
+        int seasonNumber = 2;
+
+        Season duplicateSeason = new Season();
+        duplicateSeason.setId("some-id");
+        duplicateSeason.setSeriesId(seriesId);
+        duplicateSeason.setSeasonNumber(seasonNumber);
+
+        SeasonRequest request = new SeasonRequest(seasonNumber, 9.0, "poster_url");
+        when(seasonRepository.findByIdAndSeriesId(seasonId, seriesId)).thenReturn(Optional.of(season));
+        when(seasonRepository.findBySeriesIdAndSeasonNumber(seriesId, seasonNumber)).thenReturn(Optional.of(duplicateSeason));
+
+        // Act & Assert
+        assertThrows(EntityExistsException.class, () -> {
+            seasonAdminService.updateSeasonInSeries(seriesId, seasonId, request);
+        });
+
+        // Assert
+        verify(seasonRepository, times(1)).findByIdAndSeriesId(seasonId, seriesId);
+        verify(seasonRepository, times(1)).findBySeriesIdAndSeasonNumber(seriesId, seasonNumber);
+
+        verify(seasonRepository, never()).save(any(Season.class));
+    }
+
+    @Test
+    void testUpdateSeasonInSeries_SeasonDoesntExist() {
+        // Arrange
+        int seasonNumber = 2;
+
+        SeasonRequest request = new SeasonRequest(seasonNumber, 9.0, "poster_url");
+        when(seasonRepository.findByIdAndSeriesId(seasonId, seriesId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> {
+            seasonAdminService.updateSeasonInSeries(seriesId, seasonId, request);
+        });
+
+        // Assert
+        verify(seasonRepository, times(1)).findByIdAndSeriesId(seasonId, seriesId);
+
+        verify(seasonRepository, never()).findBySeriesIdAndSeasonNumber(anyString(), anyInt());
+        verify(seasonRepository, never()).save(any(Season.class));
     }
 
     // ------------------------------------
