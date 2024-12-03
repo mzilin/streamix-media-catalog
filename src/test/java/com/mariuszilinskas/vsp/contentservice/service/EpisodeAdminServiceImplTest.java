@@ -139,23 +139,19 @@ public class EpisodeAdminServiceImplTest {
         ArgumentCaptor<Episode> captor = ArgumentCaptor.forClass(Episode.class);
         int episodeNumber = episodeRequest.episodeNumber();
 
-        Episode existingEpisode = new Episode();
-        existingEpisode.setId(episodeId);
-        existingEpisode.setSeriesId(seriesId);
-        existingEpisode.setSeasonId(seasonId);
-
+        when(episodeRepository.findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId))
+                .thenReturn(Optional.of(episode));
         when(episodeRepository.findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber))
                 .thenReturn(Optional.of(episode));
-        when(episodeRepository.findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId))
-                .thenReturn(Optional.of(existingEpisode));
-        when(episodeRepository.save(captor.capture())).thenReturn(existingEpisode);
+        when(episodeRepository.save(captor.capture())).thenReturn(episode);
 
         // Act
-        episodeAdminService.updateEpisodeInSeason(seriesId, seasonId, episodeId, updatedEpisodeRequest);
+        Episode response = episodeAdminService.updateEpisodeInSeason(seriesId, seasonId, episodeId, updatedEpisodeRequest);
 
         // Assert
-        verify(episodeRepository, times(1)).findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
+        assertNotNull(response);
         verify(episodeRepository, times(1)).findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId);
+        verify(episodeRepository, times(1)).findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
         verify(episodeRepository, times(1)).save(captor.capture());
 
         Episode savedEpisode = captor.getValue();
@@ -174,25 +170,44 @@ public class EpisodeAdminServiceImplTest {
 
     @Test
     void testUpdateEpisodeInSeason_DuplicateEpisodeNumber() {
-        int episodeNumber = episodeRequest.episodeNumber();
+        int episodeNumber = updatedEpisodeRequest.episodeNumber();
 
-        Episode existingEpisode = new Episode();
-        existingEpisode.setId("differentEpisodeId");
-        existingEpisode.setSeriesId(seriesId);
-        existingEpisode.setSeasonId(seasonId);
-        existingEpisode.setEpisodeNumber(episodeNumber);
+        Episode duplicateEpisode = new Episode();
+        duplicateEpisode.setId("some-id");
+        duplicateEpisode.setSeriesId(seriesId);
+        duplicateEpisode.setSeasonId(seasonId);
+        duplicateEpisode.setEpisodeNumber(episodeNumber);
 
+        when(episodeRepository.findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId))
+                .thenReturn(Optional.of(episode));
         when(episodeRepository.findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber))
-                .thenReturn(Optional.of(existingEpisode));
+                .thenReturn(Optional.of(duplicateEpisode));
 
         // Act & Assert
         assertThrows(EntityExistsException.class, () -> {
             episodeAdminService.updateEpisodeInSeason(seriesId, seasonId, episodeId, updatedEpisodeRequest);
         });
 
+        verify(episodeRepository, times(1)).findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId);
         verify(episodeRepository, times(1)).findBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
 
-        verify(episodeRepository, never()).findByIdAndSeriesIdAndSeasonId(anyString(), anyString(), anyString());
+        verify(episodeRepository, never()).save(any(Episode.class));
+    }
+
+    @Test
+    void testUpdateEpisodeInSeason_EpisodeDoesntExist() {
+        // Assert
+        when(episodeRepository.findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId))
+                .thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> {
+            episodeAdminService.updateEpisodeInSeason(seriesId, seasonId, episodeId, updatedEpisodeRequest);
+        });
+
+        verify(episodeRepository, times(1)).findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId);
+
+        verify(episodeRepository, never()).findBySeriesIdAndSeasonIdAndEpisodeNumber(anyString(), anyString(), anyInt());
         verify(episodeRepository, never()).save(any(Episode.class));
     }
 
