@@ -1,6 +1,7 @@
 package com.mariuszilinskas.vsp.contentservice.service;
 
 import com.mariuszilinskas.vsp.contentservice.dto.PersonRequest;
+import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
 import com.mariuszilinskas.vsp.contentservice.model.document.Person;
 import com.mariuszilinskas.vsp.contentservice.repository.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,6 +30,10 @@ public class PersonAdminServiceImplTest {
 
     private final String personId = "person01";
     private final Person person = new Person();
+    private final Person person2 = new Person();
+
+    private PersonRequest createRequest;
+    private PersonRequest updateRequest;
 
     // ------------------------------------
 
@@ -39,6 +45,29 @@ public class PersonAdminServiceImplTest {
         person.setBorn(LocalDate.of(1974, 11, 11));
         person.setDied(null);
         person.setImageURL("https://example.com/leonardo_dicaprio.jpg");
+
+        createRequest = new PersonRequest(
+                person.getName(),
+                person.getDescription(),
+                person.getBorn(),
+                person.getDied(),
+                person.getImageURL()
+        );
+
+        person2.setId("person02");
+        person2.setName("Al Pacino");
+        person2.setDescription("American actor and filmmaker");
+        person2.setBorn(LocalDate.of(1940, 4, 25));
+        person2.setDied(null);
+        person2.setImageURL("https://example.com/alpacino.jpg");
+
+        updateRequest = new PersonRequest(
+                person2.getName(),
+                person2.getDescription(),
+                person2.getBorn(),
+                person2.getDied(),
+                person2.getImageURL()
+        );
     }
 
     // ------------------------------------
@@ -48,22 +77,14 @@ public class PersonAdminServiceImplTest {
         // Arrange
         ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
 
-        PersonRequest request = new PersonRequest(
-                person.getName(),
-                person.getDescription(),
-                person.getBorn(),
-                person.getDied(),
-                person.getImageURL()
-        );
-
         when(personRepository.save(captor.capture())).thenReturn(person);
 
         // Act
-        Person response = personAdminService.createPerson(request);
+        Person response = personAdminService.createPerson(createRequest);
 
         // Assert
         assertNotNull(response);
-        assertEquals(request.name(), response.getName());
+        assertEquals(createRequest.name(), response.getName());
 
         verify(personRepository, times(1)).save(captor.capture());
 
@@ -80,19 +101,43 @@ public class PersonAdminServiceImplTest {
     @Test
     void testUpdatePerson() {
         // Arrange
+        ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
+
+        when(personRepository.findById(personId)).thenReturn(Optional.of(person));
+        when(personRepository.save(captor.capture())).thenReturn(person2);
 
         // Act
+        Person response = personAdminService.updatePerson(personId, updateRequest);
 
         // Assert
+        assertNotNull(response);
+        assertEquals(updateRequest.name(), response.getName());
+
+        verify(personRepository, times(1)).findById(personId);
+        verify(personRepository, times(1)).save(captor.capture());
+
+        Person savedPerson = captor.getValue();
+        assertEquals(person2.getName(), savedPerson.getName());
+        assertEquals(person2.getDescription(), savedPerson.getDescription());
+        assertEquals(person2.getBorn(), savedPerson.getBorn());
+        assertEquals(person2.getDied(), savedPerson.getDied());
+        assertEquals(person2.getImageURL(), savedPerson.getImageURL());
     }
 
     @Test
     void testUpdatePerson_PersonDoesntExist() {
         // Arrange
+        when(personRepository.findById(personId)).thenReturn(Optional.empty());
 
-        // Act
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> {
+            personAdminService.updatePerson(personId, updateRequest);
+        });
 
         // Assert
+        verify(personRepository, times(1)).findById(personId);
+
+        verify(personRepository, never()).save(any(Person.class));
     }
 
     // ------------------------------------
