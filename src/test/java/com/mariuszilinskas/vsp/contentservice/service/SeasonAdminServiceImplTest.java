@@ -1,5 +1,6 @@
 package com.mariuszilinskas.vsp.contentservice.service;
 
+import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
 import com.mariuszilinskas.vsp.contentservice.model.document.Season;
 import com.mariuszilinskas.vsp.contentservice.repository.SeasonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,10 +116,36 @@ public class SeasonAdminServiceImplTest {
     @Test
     void testRemoveSeasonFromSeries() {
         // Arrange
+        when(seasonRepository.findByIdAndSeriesId(seasonId, seriesId)).thenReturn(Optional.of(season));
+        when(seasonRepository.countBySeriesId(seriesId)).thenReturn(1);
+        when(mediaAdminService.updateSeriesSeasonCount(seriesId, 0)).thenReturn(0);
+        doNothing().when(episodeAdminService).removeAllEpisodesFromSeason(seriesId, seasonId);
 
         // Act
+        seasonAdminService.removeSeasonFromSeries(seriesId, seasonId);
 
         // Assert
+        verify(seasonRepository, times(1)).findByIdAndSeriesId(seasonId, seriesId);
+        verify(seasonRepository, times(1)).countBySeriesId(seriesId);
+        verify(mediaAdminService, times(1)).updateSeriesSeasonCount(seriesId, 0);
+        verify(episodeAdminService, times(1)).removeAllEpisodesFromSeason(seriesId, seasonId);
+    }
+
+    @Test
+    void testRemoveSeasonFromSeries_SeasonDoesntExist() {
+        // Arrange
+        when(seasonRepository.findByIdAndSeriesId(seasonId, seriesId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> {
+            seasonAdminService.removeSeasonFromSeries(seriesId, seasonId);
+        });
+
+        // Assert
+        verify(seasonRepository, times(1)).findByIdAndSeriesId(seasonId, seriesId);
+        verify(seasonRepository, never()).countBySeriesId(anyString());
+        verify(mediaAdminService, never()).updateSeriesSeasonCount(anyString(), anyInt());
+        verify(episodeAdminService, never()).removeAllEpisodesFromSeason(anyString(), anyString());
     }
 
     // ------------------------------------
