@@ -56,10 +56,9 @@ public class PersonAdminServiceImpl implements PersonAdminService {
     @Transactional
     public void deletePerson(String id) {
         logger.info("Deleting Person [id: '{}']", id);
-        personRepository.deleteById(id);
+        Person person = findPersonById(id);
+        personRepository.delete(person);
     }
-
-    // --------------------------------------
 
     private Person findPersonById(String id) {
         return personRepository.findById(id)
