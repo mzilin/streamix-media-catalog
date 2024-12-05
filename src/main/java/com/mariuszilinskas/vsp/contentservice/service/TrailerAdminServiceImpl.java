@@ -61,11 +61,16 @@ public class TrailerAdminServiceImpl implements TrailerAdminService {
         trailerRepository.delete(trailer);
     }
 
-    // --------------------------------------
-
     private Trailer findTrailerByIdAndMediaId(String id, String mediaId) {
         return trailerRepository.findByIdAndMediaId(id, mediaId)
                 .orElseThrow(() -> new ResourceNotFoundException(Trailer.class, "id", id));
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllTrailersByMediaId(String mediaId) {
+        logger.info("Removing all Trailers from Media [id: '{}']", mediaId);
+        trailerRepository.deleteByMediaId(mediaId);
     }
 
 }

@@ -11,4 +11,6 @@ public interface TrailerAdminService {
 
     void deleteTrailer(String id, String mediaId);
 
+    void deleteAllTrailersByMediaId(String mediaId);
+
 }
