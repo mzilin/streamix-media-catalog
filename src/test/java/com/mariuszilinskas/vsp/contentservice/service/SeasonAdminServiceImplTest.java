@@ -171,51 +171,51 @@ public class SeasonAdminServiceImplTest {
     // ------------------------------------
 
     @Test
-    void testRemoveSeasonFromSeries() {
+    void testDeleteSeasonFromSeries() {
         // Arrange
         when(seasonRepository.findByIdAndSeriesId(seasonId, seriesId)).thenReturn(Optional.of(season));
-        doNothing().when(episodeAdminService).removeAllEpisodesFromSeason(seriesId, seasonId);
+        doNothing().when(episodeAdminService).deleteAllEpisodesFromSeason(seriesId, seasonId);
         doNothing().when(seasonRepository).delete(season);
 
         // Act
-        seasonAdminService.removeSeasonFromSeries(seriesId, seasonId);
+        seasonAdminService.deleteSeasonFromSeries(seriesId, seasonId);
 
         // Assert
         verify(seasonRepository, times(1)).findByIdAndSeriesId(seasonId, seriesId);
-        verify(episodeAdminService, times(1)).removeAllEpisodesFromSeason(seriesId, seasonId);
+        verify(episodeAdminService, times(1)).deleteAllEpisodesFromSeason(seriesId, seasonId);
         verify(seasonRepository, times(1)).delete(season);
     }
 
     @Test
-    void testRemoveSeasonFromSeries_SeasonDoesntExist() {
+    void testDeleteSeasonFromSeries_SeasonDoesntExist() {
         // Arrange
         when(seasonRepository.findByIdAndSeriesId(seasonId, seriesId)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () -> {
-            seasonAdminService.removeSeasonFromSeries(seriesId, seasonId);
+            seasonAdminService.deleteSeasonFromSeries(seriesId, seasonId);
         });
 
         // Assert
         verify(seasonRepository, times(1)).findByIdAndSeriesId(seasonId, seriesId);
 
-        verify(episodeAdminService, never()).removeAllEpisodesFromSeason(anyString(), anyString());
+        verify(episodeAdminService, never()).deleteAllEpisodesFromSeason(anyString(), anyString());
         verify(seasonRepository, never()).delete(any(Season.class));
     }
 
     // ------------------------------------
 
     @Test
-    void testRemoveAllSeasonsFromSeries() {
+    void testDeleteAllSeasonsFromSeries() {
         // Arrange
-        doNothing().when(episodeAdminService).removeAllEpisodesFromSeries(seriesId);
+        doNothing().when(episodeAdminService).deleteAllEpisodesFromSeries(seriesId);
         doNothing().when(seasonRepository).deleteBySeriesId(seriesId);
 
         // Act
-        seasonAdminService.removeAllSeasonsFromSeries(seriesId);
+        seasonAdminService.deleteAllSeasonsFromSeries(seriesId);
 
         // Assert
-        verify(episodeAdminService, times(1)).removeAllEpisodesFromSeries(seriesId);
+        verify(episodeAdminService, times(1)).deleteAllEpisodesFromSeries(seriesId);
         verify(seasonRepository, times(1)).deleteBySeriesId(seriesId);
     }
 
