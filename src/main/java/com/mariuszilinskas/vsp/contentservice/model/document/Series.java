@@ -16,7 +16,4 @@ public class Series extends Media {
     @Field("creators")
     private List<CrewMember> creators;
 
-    @Field("seasonCount")
-    private int seasonCount = 0;
-
 }
