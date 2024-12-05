@@ -8,12 +8,15 @@ import com.mariuszilinskas.vsp.contentservice.model.document.Series;
 public interface MediaAdminService {
 
     Movie createMovie(MovieRequest request);
+
     Movie updateMovieById(String mediaId, MovieRequest request);
-    void removeMovieById(String mediaId);
+
+    void deleteMovieById(String mediaId);
 
     Series createSeries(SeriesRequest request);
+
     Series updateSeriesById(String mediaId, SeriesRequest request);
-    int updateSeriesSeasonCount(String mediaId, int seasonCount);
-    void removeSeriesById(String mediaId);
+
+    void deleteSeriesById(String mediaId);
 
 }
