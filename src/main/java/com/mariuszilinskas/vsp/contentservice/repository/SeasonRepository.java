@@ -13,8 +13,6 @@ public interface SeasonRepository extends MongoRepository<Season, String> {
 
     Optional<Season> findBySeriesIdAndSeasonNumber(String seriesId, int seasonNumber);
 
-    int countBySeriesId(String seriesId);
-
     void deleteBySeriesId(String seriesId);
 
     boolean existsBySeriesIdAndSeasonNumber(String seriesId, int seasonNumber);
