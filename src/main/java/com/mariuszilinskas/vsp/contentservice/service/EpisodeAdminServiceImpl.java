@@ -25,19 +25,13 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
 
     private static final Logger logger = LoggerFactory.getLogger(EpisodeAdminServiceImpl.class);
     private final EpisodeRepository episodeRepository;
-    private final SeasonAdminService seasonAdminService;
 
     @Override
     @Transactional
     public Episode createEpisodeInSeason(String seriesId, String seasonId, EpisodeRequest request) {
         logger.info("Creating new Episode [number: '{}'] for Season [id: '{}']", request.episodeNumber(), seasonId);
-
         checkEpisodeNumberExists(seriesId, seasonId, request.episodeNumber());
-        Episode newEpisode = populateNewEpisodeWithRequestData(seriesId, seasonId, request);
-        int currentEpisodeCount = getEpisodeCountForSeason(seriesId, seasonId);
-        seasonAdminService.updateSeasonEpisodeCount(seriesId, seasonId, currentEpisodeCount + 1);
-
-        return newEpisode;
+        return populateNewEpisodeWithRequestData(seriesId, seasonId, request);
     }
 
     private void checkEpisodeNumberExists(String seriesId, String seasonId, int episodeNumber) {
@@ -86,13 +80,9 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
 
     @Override
     @Transactional
-    public void removeEpisodeFromSeason(String seriesId, String seasonId, String id) {
-        logger.info("Removing Episode [id '{}'] from Season [id: '{}']", id, seasonId);
-
+    public void deleteEpisodeFromSeason(String seriesId, String seasonId, String id) {
+        logger.info("Deleting Episode [id '{}'] from Season [id: '{}']", id, seasonId);
         Episode episode = findEpisodeBySeriesIdAndSeasonIdAndId(seriesId, seasonId, id);
-        int currentEpisodeCount = getEpisodeCountForSeason(seriesId, seasonId);
-        seasonAdminService.updateSeasonEpisodeCount(seriesId, seasonId, currentEpisodeCount - 1);
-
         episodeRepository.delete(episode);
     }
 
@@ -101,21 +91,17 @@ public class EpisodeAdminServiceImpl implements EpisodeAdminService {
                 .orElseThrow(() -> new ResourceNotFoundException(Episode.class, "id", id));
     }
 
-    private int getEpisodeCountForSeason(String seriesId, String seasonId) {
-        return episodeRepository.countBySeriesIdAndSeasonId(seriesId, seasonId);
-    }
-
     @Override
     @Transactional
-    public void removeAllEpisodesFromSeason(String seriesId, String seasonId) {
-        logger.info("Removing all Episodes from Season [id: '{}']", seasonId);
+    public void deleteAllEpisodesFromSeason(String seriesId, String seasonId) {
+        logger.info("Deleting all Episodes from Season [id: '{}']", seasonId);
         episodeRepository.deleteAllBySeriesIdAndSeasonId(seriesId, seasonId);
     }
 
     @Override
     @Transactional
-    public void removeAllEpisodesFromSeries(String seriesId) {
-        logger.info("Removing all Episodes from Series [id: '{}']", seriesId);
+    public void deleteAllEpisodesFromSeries(String seriesId) {
+        logger.info("Deleting all Episodes from Series [id: '{}']", seriesId);
         episodeRepository.deleteAllBySeriesId(seriesId);
     }
 
