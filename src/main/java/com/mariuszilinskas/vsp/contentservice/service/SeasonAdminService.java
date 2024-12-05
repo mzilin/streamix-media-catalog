@@ -9,10 +9,8 @@ public interface SeasonAdminService {
 
     Season updateSeasonInSeries(String seriesId, String id, SeasonRequest request);
 
-    int updateSeasonEpisodeCount(String seriesId, String id, int episodeCount);
+    void deleteSeasonFromSeries(String seriesId, String id);
 
-    void removeSeasonFromSeries(String seriesId, String id);
-
-    void removeAllSeasonsFromSeries(String seriesId);
+    void deleteAllSeasonsFromSeries(String seriesId);
 
 }

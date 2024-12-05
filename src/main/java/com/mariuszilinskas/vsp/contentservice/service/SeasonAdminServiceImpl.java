@@ -25,20 +25,14 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
 
     private static final Logger logger = LoggerFactory.getLogger(SeasonAdminServiceImpl.class);
     private final SeasonRepository seasonRepository;
-    private final MediaAdminService mediaAdminService;
     private final EpisodeAdminService episodeAdminService;
 
     @Override
     @Transactional
     public Season createSeasonForSeries(String seriesId, SeasonRequest request) {
         logger.info("Creating new Season [number: '{}'] for Series [id: '{}']", request.seasonNumber(), seriesId);
-
         checkSeasonNumberExists(seriesId, request.seasonNumber());
-        Season newSeason = populateNewSeasonWithRequestData(seriesId, request);
-        int currentSeasonCount = getSeasonCountForSeries(seriesId);
-        mediaAdminService.updateSeriesSeasonCount(seriesId, currentSeasonCount + 1);
-
-        return newSeason;
+        return populateNewSeasonWithRequestData(seriesId, request);
     }
 
     private void checkSeasonNumberExists(String seriesId, int seasonNumber) {
@@ -80,27 +74,11 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
 
     @Override
     @Transactional
-    public int updateSeasonEpisodeCount(String seriesId, String id, int episodeCount) {
-        logger.info("Updating Series [id: '{}'] Season [id '{}'] episode count to: '{}'", seriesId, id, episodeCount);
-
-        Season season = findSeasonBySeriesIdAndSeasonId(seriesId, id);
-        int newCount = Math.max(episodeCount, 0);
-        season.setEpisodeCount(newCount);
-
-        seasonRepository.save(season);
-        return newCount;
-    }
-
-    @Override
-    @Transactional
-    public void removeSeasonFromSeries(String seriesId, String id) {
+    public void deleteSeasonFromSeries(String seriesId, String id) {
         logger.info("Removing Season [id '{}'] from Series [id: '{}']", id, seriesId);
-
-        findSeasonBySeriesIdAndSeasonId(seriesId, id);
-        int currentSeasonCount = getSeasonCountForSeries(seriesId);
-        mediaAdminService.updateSeriesSeasonCount(seriesId, currentSeasonCount - 1);
-
-        episodeAdminService.removeAllEpisodesFromSeason(seriesId, id);
+        Season season = findSeasonBySeriesIdAndSeasonId(seriesId, id);
+        episodeAdminService.deleteAllEpisodesFromSeason(seriesId, id);
+        seasonRepository.delete(season);
     }
 
     private Season findSeasonBySeriesIdAndSeasonId(String seriesId, String id) {
@@ -108,17 +86,12 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
                 .orElseThrow(() -> new ResourceNotFoundException(Season.class, "id", id));
     }
 
-    private int getSeasonCountForSeries(String seriesId) {
-        return seasonRepository.countBySeriesId(seriesId);
-    }
-
     @Override
     @Transactional
-    public void removeAllSeasonsFromSeries(String seriesId) {
+    public void deleteAllSeasonsFromSeries(String seriesId) {
         logger.info("Removing all Seasons from Series [id: '{}']", seriesId);
-
+        episodeAdminService.deleteAllEpisodesFromSeries(seriesId);
         seasonRepository.deleteBySeriesId(seriesId);
-        episodeAdminService.removeAllEpisodesFromSeries(seriesId);
     }
 
 }
