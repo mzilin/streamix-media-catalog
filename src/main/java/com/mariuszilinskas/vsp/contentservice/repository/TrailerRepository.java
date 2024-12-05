@@ -11,4 +11,6 @@ public interface TrailerRepository extends MongoRepository<Trailer, String> {
 
     Optional<Trailer> findByIdAndMediaId(String id, String mediaId);
 
+    void deleteByMediaId(String mediaId);
+
 }
