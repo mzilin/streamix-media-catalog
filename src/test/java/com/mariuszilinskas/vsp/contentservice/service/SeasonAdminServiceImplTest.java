@@ -42,7 +42,6 @@ public class SeasonAdminServiceImplTest {
         season.setSeriesId(seriesId);
         season.setSeasonNumber(1);
         season.setRating(8.0);
-        season.setEpisodeCount(1);
         season.setPoster("poster_url");
     }
 
