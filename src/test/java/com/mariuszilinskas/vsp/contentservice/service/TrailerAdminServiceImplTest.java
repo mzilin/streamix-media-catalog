@@ -176,4 +176,18 @@ public class TrailerAdminServiceImplTest {
         verify(trailerRepository, never()).delete(any(Trailer.class));
     }
 
+    // ------------------------------------
+
+    @Test
+    void testDeleteAllTrailersByMediaId() {
+        // Arrange
+        doNothing().when(trailerRepository).deleteByMediaId(mediaId);
+
+        // Act
+        trailerAdminService.deleteAllTrailersByMediaId(mediaId);
+
+        // Assert
+        verify(trailerRepository, times(1)).deleteByMediaId(mediaId);
+    }
+
 }
