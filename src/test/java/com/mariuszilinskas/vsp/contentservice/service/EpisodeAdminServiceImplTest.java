@@ -87,9 +87,6 @@ public class EpisodeAdminServiceImplTest {
         when(episodeRepository.existsBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber))
                 .thenReturn(false);
         when(episodeRepository.save(captor.capture())).thenReturn(episode);
-        when(episodeRepository.countBySeriesIdAndSeasonId(seriesId, seasonId)).thenReturn(0);
-        when(seasonAdminService.updateSeasonEpisodeCount(seriesId, seasonId, 1)).thenReturn(1);
-
 
         // Act
         Episode response = episodeAdminService.createEpisodeInSeason(seriesId, seasonId, episodeRequest);
@@ -100,8 +97,6 @@ public class EpisodeAdminServiceImplTest {
 
         verify(episodeRepository, times(1)).existsBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
         verify(episodeRepository, times(1)).save(captor.capture());
-        verify(episodeRepository, times(1)).countBySeriesIdAndSeasonId(seriesId, seasonId);
-        verify(seasonAdminService, times(1)).updateSeasonEpisodeCount(seriesId, seasonId, 1);
 
         Episode savedEpisode = captor.getValue();
         assertEquals(episodeRequest.title(), savedEpisode.getTitle());
@@ -128,8 +123,6 @@ public class EpisodeAdminServiceImplTest {
         // Assert
         verify(episodeRepository, times(1)).existsBySeriesIdAndSeasonIdAndEpisodeNumber(seriesId, seasonId, episodeNumber);
         verify(episodeRepository, never()).save(any(Episode.class));
-        verify(episodeRepository, never()).countBySeriesIdAndSeasonId(anyString(), anyString());
-        verify(seasonAdminService, never()).updateSeasonEpisodeCount(anyString(), anyString(), anyInt());
     }
 
     // ------------------------------------
@@ -214,47 +207,42 @@ public class EpisodeAdminServiceImplTest {
     // ------------------------------------
 
     @Test
-    void testRemoveEpisodeFromSeason() {
+    void testDeleteEpisodeFromSeason() {
         // Arrange
         when(episodeRepository.findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId))
                 .thenReturn(Optional.of(episode));
-        when(episodeRepository.countBySeriesIdAndSeasonId(seriesId, seasonId)).thenReturn(1);
-        when(seasonAdminService.updateSeasonEpisodeCount(seriesId, seasonId, 0)).thenReturn(0);
 
         // Act
-        episodeAdminService.removeEpisodeFromSeason(seriesId, seasonId, episodeId);
+        episodeAdminService.deleteEpisodeFromSeason(seriesId, seasonId, episodeId);
 
         // Assert
         verify(episodeRepository, times(1)).findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId);
-        verify(episodeRepository, times(1)).countBySeriesIdAndSeasonId(seriesId, seasonId);
-        verify(seasonAdminService, times(1)).updateSeasonEpisodeCount(seriesId, seasonId, 0);
-        verify(episodeRepository, times(1)).delete(any(Episode.class));
+        verify(episodeRepository, times(1)).delete(episode);
     }
 
     @Test
-    void testRemoveEpisodeFromSeason_EpisodeDoesntExist() {
+    void testDeleteEpisodeFromSeason_EpisodeDoesntExist() {
         // Arrange
         when(episodeRepository.findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId))
                 .thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () -> {
-            episodeAdminService.removeEpisodeFromSeason(seriesId, seasonId, episodeId);
+            episodeAdminService.deleteEpisodeFromSeason(seriesId, seasonId, episodeId);
         });
 
         // Assert
         verify(episodeRepository, times(1)).findByIdAndSeriesIdAndSeasonId(episodeId, seriesId, seasonId);
-        verify(episodeRepository, never()).countBySeriesIdAndSeasonId(anyString(), anyString());
-        verify(seasonAdminService, never()).updateSeasonEpisodeCount(anyString(), anyString(), anyInt());
+
         verify(episodeRepository, never()).delete(any(Episode.class));
     }
 
     // ------------------------------------
 
     @Test
-    void testRemoveAllEpisodesFromSeason() {
+    void testDeleteAllEpisodesFromSeason() {
         // Act
-        episodeAdminService.removeAllEpisodesFromSeason(seriesId, seasonId);
+        episodeAdminService.deleteAllEpisodesFromSeason(seriesId, seasonId);
 
         // Assert
         verify(episodeRepository, times(1)).deleteAllBySeriesIdAndSeasonId(seriesId, seasonId);
@@ -263,12 +251,12 @@ public class EpisodeAdminServiceImplTest {
     // ------------------------------------
 
     @Test
-    void testRemoveAllEpisodesFromSeries() {
+    void testDeleteAllEpisodesFromSeries() {
         // Arrange
         doNothing().when(episodeRepository).deleteAllBySeriesId(seriesId);
 
         // Act
-        episodeAdminService.removeAllEpisodesFromSeries(seriesId);
+        episodeAdminService.deleteAllEpisodesFromSeries(seriesId);
 
         // Assert
         verify(episodeRepository, times(1)).deleteAllBySeriesId(seriesId);
