@@ -75,7 +75,7 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
     @Override
     @Transactional
     public void deleteSeasonFromSeries(String seriesId, String id) {
-        logger.info("Removing Season [id '{}'] from Series [id: '{}']", id, seriesId);
+        logger.info("Deleting Season [id '{}'] from Series [id: '{}']", id, seriesId);
         Season season = findSeasonBySeriesIdAndSeasonId(seriesId, id);
         episodeAdminService.deleteAllEpisodesFromSeason(seriesId, id);
         seasonRepository.delete(season);
@@ -89,7 +89,7 @@ public class SeasonAdminServiceImpl implements SeasonAdminService {
     @Override
     @Transactional
     public void deleteAllSeasonsFromSeries(String seriesId) {
-        logger.info("Removing all Seasons from Series [id: '{}']", seriesId);
+        logger.info("Deleting all Seasons from Series [id: '{}']", seriesId);
         episodeAdminService.deleteAllEpisodesFromSeries(seriesId);
         seasonRepository.deleteBySeriesId(seriesId);
     }

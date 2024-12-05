@@ -69,7 +69,7 @@ public class TrailerAdminServiceImpl implements TrailerAdminService {
     @Override
     @Transactional
     public void deleteAllTrailersByMediaId(String mediaId) {
-        logger.info("Removing all Trailers from Media [id: '{}']", mediaId);
+        logger.info("Deleting all Trailers from Media [id: '{}']", mediaId);
         trailerRepository.deleteByMediaId(mediaId);
     }
 
