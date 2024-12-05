@@ -22,11 +22,18 @@ spring:
   data:
     mongodb:
       uri: ${MONGO_DB_URI}
+    redis:
+      host: ${localhost}
+      port: ${REDIS_PORT}
   rabbitmq:
     host: ${RMQ_HOST}
     port: ${RMQ_PORT}
     username: ${RMQ_USERNAME}
     password: ${RMQ_PASSWORD}
+  cache:
+    type: redis
+    redis:
+      time-to-live: 43200000   # 12 hours in milliseconds
 
 # Eureka configuration
 eureka:
