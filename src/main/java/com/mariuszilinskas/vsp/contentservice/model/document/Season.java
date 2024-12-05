@@ -23,9 +23,6 @@ public class Season {
     @Field("rating")
     private Double rating = 0.0;
 
-    @Field("episodeCount")
-    private int episodeCount = 0;
-
     @Field("poster")
     private String poster;
 
