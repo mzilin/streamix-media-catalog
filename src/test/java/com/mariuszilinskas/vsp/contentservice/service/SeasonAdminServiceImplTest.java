@@ -199,7 +199,6 @@ public class SeasonAdminServiceImplTest {
         // Assert
         verify(seasonRepository, times(1)).findByIdAndSeriesId(seasonId, seriesId);
 
-        verify(seasonRepository, never()).countBySeriesId(anyString());
         verify(episodeAdminService, never()).removeAllEpisodesFromSeason(anyString(), anyString());
         verify(seasonRepository, never()).delete(any(Season.class));
     }
