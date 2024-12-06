@@ -27,12 +27,13 @@ public class TrailerAdminControllerTest {
     @MockBean
     private TrailerAdminService trailerAdminService;
 
-    private static final String BASE_URL = "/admin/trailer/";
     private static final String trailerId = "trailer01";
     private static final String mediaId = "media01";
-    private Trailer trailer = new Trailer();
+    private final Trailer trailer = new Trailer();
     private TrailerRequest trailerRequest;
     private Trailer trailerResponse;
+
+    private static final String BASE_URL = "/admin/media/" + mediaId + "/trailers";
 
     // ------------------------------------
 
@@ -72,7 +73,7 @@ public class TrailerAdminControllerTest {
         when(trailerAdminService.createTrailer(mediaId, trailerRequest)).thenReturn(trailerResponse);
 
         // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_URL + mediaId)
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(trailerRequest)))
                 .andExpect(status().isCreated())
@@ -95,7 +96,7 @@ public class TrailerAdminControllerTest {
         when(trailerAdminService.updateTrailer(trailerId, mediaId, trailerRequest)).thenReturn(trailerResponse);
 
         // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.put(BASE_URL + mediaId + "/" + trailerId)
+        mockMvc.perform(MockMvcRequestBuilders.put(BASE_URL + "/" + trailerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(trailerResponse)))
                 .andExpect(status().isOk())
@@ -118,7 +119,7 @@ public class TrailerAdminControllerTest {
         doNothing().when(trailerAdminService).deleteTrailer(trailerId, mediaId);
 
         // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.delete(BASE_URL + mediaId + "/" + trailerId))
+        mockMvc.perform(MockMvcRequestBuilders.delete(BASE_URL + "/" + trailerId))
                 .andExpect(status().isNoContent());
 
         verify(trailerAdminService, times(1)).deleteTrailer(trailerId, mediaId);
