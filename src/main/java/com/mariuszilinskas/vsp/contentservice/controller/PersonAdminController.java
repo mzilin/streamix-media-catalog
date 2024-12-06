@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Marius Zilinskas
  */
 @RestController
-@RequestMapping("/admin/person")
+@RequestMapping("/admin/people")
 @RequiredArgsConstructor
 public class PersonAdminController {
 
