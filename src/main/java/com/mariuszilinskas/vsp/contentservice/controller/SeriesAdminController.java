@@ -2,7 +2,6 @@ package com.mariuszilinskas.vsp.contentservice.controller;
 
 import com.mariuszilinskas.vsp.contentservice.dto.*;
 import com.mariuszilinskas.vsp.contentservice.model.document.*;
-import com.mariuszilinskas.vsp.contentservice.service.EpisodeAdminService;
 import com.mariuszilinskas.vsp.contentservice.service.MediaAdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class SeriesAdminController {
 
     private final MediaAdminService mediaAdminService;
-    private final EpisodeAdminService episodeAdminService;
 
     @PostMapping
     public ResponseEntity<Series> createSeries(@Valid @RequestBody SeriesRequest request) {
@@ -31,26 +29,20 @@ public class SeriesAdminController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{seriesId}")
-    @CacheEvict(value = "media", key = "#seriesId")
+    @PutMapping("/{mediaId}")
+    @CacheEvict(value = "media", key = "#mediaId")
     public ResponseEntity<Series> updateSeriesById(
-            @PathVariable String seriesId,
+            @PathVariable String mediaId,
             @Valid @RequestBody SeriesRequest request
     ) {
-        Series response = mediaAdminService.updateSeriesById(seriesId, request);
+        Series response = mediaAdminService.updateSeriesById(mediaId, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{seriesId}")
-    @CacheEvict(value = "media", key = "#seriesId")
-    public ResponseEntity<Void> deleteSeriesById(@PathVariable String seriesId){
-        mediaAdminService.deleteSeriesById(seriesId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @DeleteMapping("/{seriesId}/episodes")
-    public ResponseEntity<Void> deleteAllEpisodesFromSeries(@PathVariable String seriesId) {
-        episodeAdminService.deleteAllEpisodesFromSeries(seriesId);
+    @DeleteMapping("/{mediaId}")
+    @CacheEvict(value = "media", key = "#mediaId")
+    public ResponseEntity<Void> deleteSeriesById(@PathVariable String mediaId){
+        mediaAdminService.deleteSeriesById(mediaId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

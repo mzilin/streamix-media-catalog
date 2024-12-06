@@ -29,20 +29,20 @@ public class MovieAdminController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{movieId}")
-    @CacheEvict(value = "media", key = "#movieId")
+    @PutMapping("/{mediaId}")
+    @CacheEvict(value = "media", key = "#mediaId")
     public ResponseEntity<Movie> updateMovieById(
-            @PathVariable String movieId,
+            @PathVariable String mediaId,
             @Valid @RequestBody MovieRequest request
     ) {
-        Movie response = mediaAdminService.updateMovieById(movieId, request);
+        Movie response = mediaAdminService.updateMovieById(mediaId, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{movieId}")
-    @CacheEvict(value = "media", key = "#movieId")
-    public ResponseEntity<Void> deleteMovieById(@PathVariable String movieId){
-        mediaAdminService.deleteMovieById(movieId);
+    @DeleteMapping("/{mediaId}")
+    @CacheEvict(value = "media", key = "#mediaId")
+    public ResponseEntity<Void> deleteMovieById(@PathVariable String mediaId){
+        mediaAdminService.deleteMovieById(mediaId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
