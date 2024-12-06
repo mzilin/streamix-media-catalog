@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
  * @author Marius Zilinskas
  */
 @RestController
-@RequestMapping("/admin/trailer")
+@RequestMapping("/admin/media/{mediaId}/trailers")
 @RequiredArgsConstructor
 public class TrailerAdminController {
 
     private final TrailerAdminService trailerAdminService;
 
-    @PostMapping("/{mediaId}")
+    @PostMapping
     public ResponseEntity<Trailer> createTrailer(
             @PathVariable String mediaId,
             @Valid @RequestBody TrailerRequest request
@@ -31,7 +31,7 @@ public class TrailerAdminController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{mediaId}/{trailerId}")
+    @PutMapping("/{trailerId}")
     public ResponseEntity<Trailer> updateTrailer(
             @PathVariable String trailerId,
             @PathVariable String mediaId,
@@ -41,7 +41,7 @@ public class TrailerAdminController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{mediaId}/{trailerId}")
+    @DeleteMapping("/{trailerId}")
     public ResponseEntity<Void> deleteTrailer(
             @PathVariable String trailerId,
             @PathVariable String mediaId
