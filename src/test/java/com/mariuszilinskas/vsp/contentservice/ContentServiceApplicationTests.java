@@ -55,7 +55,10 @@ class ContentServiceApplicationTests {
 	private MediaController mediaController;
 
 	@Autowired
-	private MediaAdminController mediaAdminController;
+	private MovieAdminController movieAdminController;
+
+	@Autowired
+	private SeriesAdminController seriesAdminController;
 
 	@Autowired
 	private SeasonAdminController seasonAdminController;
@@ -143,8 +146,13 @@ class ContentServiceApplicationTests {
 	}
 
 	@Test
-	void mediaAdminControllerBeanLoads() {
-		assertNotNull(mediaAdminController, "Media Admin Controller should have been auto-wired by Spring Context");
+	void movieAdminControllerBeanLoads() {
+		assertNotNull(movieAdminController, "Movie Admin Controller should have been auto-wired by Spring Context");
+	}
+
+	@Test
+	void seriesAdminControllerBeanLoads() {
+		assertNotNull(seriesAdminController, "Series Admin Controller should have been auto-wired by Spring Context");
 	}
 
 	@Test
