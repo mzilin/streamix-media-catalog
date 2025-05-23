@@ -1,8 +1,8 @@
-package com.mariuszilinskas.vsp.contentservice.controller;
+package com.mariuszilinskas.vsp.media.catalog.controller;
 
-import com.mariuszilinskas.vsp.contentservice.dto.PersonRequest;
-import com.mariuszilinskas.vsp.contentservice.model.document.Person;
-import com.mariuszilinskas.vsp.contentservice.service.PersonAdminService;
+import com.mariuszilinskas.vsp.media.catalog.dto.PersonRequest;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Person;
+import com.mariuszilinskas.vsp.media.catalog.service.PersonAdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

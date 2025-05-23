@@ -1,15 +1,15 @@
-package com.mariuszilinskas.vsp.contentservice.service;
+package com.mariuszilinskas.vsp.media.catalog.service;
 
-import com.mariuszilinskas.vsp.contentservice.dto.MediaRequest;
-import com.mariuszilinskas.vsp.contentservice.dto.MovieRequest;
-import com.mariuszilinskas.vsp.contentservice.dto.SeriesRequest;
-import com.mariuszilinskas.vsp.contentservice.enums.ContentType;
-import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
-import com.mariuszilinskas.vsp.contentservice.model.document.Media;
-import com.mariuszilinskas.vsp.contentservice.model.document.Movie;
-import com.mariuszilinskas.vsp.contentservice.model.document.Series;
-import com.mariuszilinskas.vsp.contentservice.repository.MediaRepository;
-import com.mariuszilinskas.vsp.contentservice.util.ContentUtils;
+import com.mariuszilinskas.vsp.media.catalog.dto.MediaRequest;
+import com.mariuszilinskas.vsp.media.catalog.dto.MovieRequest;
+import com.mariuszilinskas.vsp.media.catalog.dto.SeriesRequest;
+import com.mariuszilinskas.vsp.media.catalog.enums.ContentType;
+import com.mariuszilinskas.vsp.media.catalog.exception.ResourceNotFoundException;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Media;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Movie;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Series;
+import com.mariuszilinskas.vsp.media.catalog.repository.MediaRepository;
+import com.mariuszilinskas.vsp.media.catalog.util.CatalogUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,7 +122,7 @@ public class MediaAdminServiceImpl implements MediaAdminService {
     private void applyCommonMediaUpdates(Media media, MediaRequest request) {
         media.setTitle(request.title());
         media.setDescription(request.description());
-        media.setType(ContentUtils.convertStringToEnum(request.type(), ContentType.class));
+        media.setType(CatalogUtils.convertStringToEnum(request.type(), ContentType.class));
         media.setReleaseDate(request.releaseDate());
         media.setReleaseCountries(request.releaseCountries());
         media.setRating(request.rating());

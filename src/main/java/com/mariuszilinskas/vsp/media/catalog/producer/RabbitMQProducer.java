@@ -1,6 +1,6 @@
-package com.mariuszilinskas.vsp.contentservice.producer;
+package com.mariuszilinskas.vsp.media.catalog.producer;
 
-import com.mariuszilinskas.vsp.contentservice.dto.MediaESRequest;
+import com.mariuszilinskas.vsp.media.catalog.dto.MediaESRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

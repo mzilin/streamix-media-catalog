@@ -1,10 +1,10 @@
-package com.mariuszilinskas.vsp.contentservice.model.document;
+package com.mariuszilinskas.vsp.media.catalog.model.document;
 
-import com.mariuszilinskas.vsp.contentservice.enums.ContentType;
-import com.mariuszilinskas.vsp.contentservice.enums.Genre;
-import com.mariuszilinskas.vsp.contentservice.enums.Tag;
-import com.mariuszilinskas.vsp.contentservice.model.embedded.CastMember;
-import com.mariuszilinskas.vsp.contentservice.model.embedded.CrewMember;
+import com.mariuszilinskas.vsp.media.catalog.enums.ContentType;
+import com.mariuszilinskas.vsp.media.catalog.enums.Genre;
+import com.mariuszilinskas.vsp.media.catalog.enums.Tag;
+import com.mariuszilinskas.vsp.media.catalog.model.embedded.CastMember;
+import com.mariuszilinskas.vsp.media.catalog.model.embedded.CrewMember;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.index.CompoundIndex;

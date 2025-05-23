@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Test class for the Spring application context and bean configuration in the ContentService application.
  */
 @SpringBootTest
-class ContentServiceApplicationTests {
+class CatalogServiceApplicationTests {
 
 	@Autowired
 	private MediaServiceImpl mediaService;

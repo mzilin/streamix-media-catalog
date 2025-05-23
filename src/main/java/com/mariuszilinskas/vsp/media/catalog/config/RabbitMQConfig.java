@@ -1,4 +1,4 @@
-package com.mariuszilinskas.vsp.contentservice.config;
+package com.mariuszilinskas.vsp.media.catalog.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;

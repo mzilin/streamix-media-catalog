@@ -1,9 +1,9 @@
-package com.mariuszilinskas.vsp.contentservice.service;
+package com.mariuszilinskas.vsp.media.catalog.service;
 
-import com.mariuszilinskas.vsp.contentservice.dto.MovieRequest;
-import com.mariuszilinskas.vsp.contentservice.dto.SeriesRequest;
-import com.mariuszilinskas.vsp.contentservice.model.document.Movie;
-import com.mariuszilinskas.vsp.contentservice.model.document.Series;
+import com.mariuszilinskas.vsp.media.catalog.dto.MovieRequest;
+import com.mariuszilinskas.vsp.media.catalog.dto.SeriesRequest;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Movie;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Series;
 
 public interface MediaAdminService {
 

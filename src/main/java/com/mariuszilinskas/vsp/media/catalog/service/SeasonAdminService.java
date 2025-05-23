@@ -1,7 +1,7 @@
-package com.mariuszilinskas.vsp.contentservice.service;
+package com.mariuszilinskas.vsp.media.catalog.service;
 
-import com.mariuszilinskas.vsp.contentservice.dto.SeasonRequest;
-import com.mariuszilinskas.vsp.contentservice.model.document.Season;
+import com.mariuszilinskas.vsp.media.catalog.dto.SeasonRequest;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Season;
 
 public interface SeasonAdminService {
 

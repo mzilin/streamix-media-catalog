@@ -1,4 +1,4 @@
-package com.mariuszilinskas.vsp.contentservice.dto;
+package com.mariuszilinskas.vsp.media.catalog.dto;
 
 import java.time.LocalDate;
 import java.util.List;

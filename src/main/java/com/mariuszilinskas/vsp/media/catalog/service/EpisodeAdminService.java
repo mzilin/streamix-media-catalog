@@ -1,7 +1,7 @@
-package com.mariuszilinskas.vsp.contentservice.service;
+package com.mariuszilinskas.vsp.media.catalog.service;
 
-import com.mariuszilinskas.vsp.contentservice.dto.EpisodeRequest;
-import com.mariuszilinskas.vsp.contentservice.model.document.Episode;
+import com.mariuszilinskas.vsp.media.catalog.dto.EpisodeRequest;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Episode;
 
 public interface EpisodeAdminService {
 

@@ -1,7 +1,7 @@
-package com.mariuszilinskas.vsp.contentservice.util;
+package com.mariuszilinskas.vsp.media.catalog.util;
 
-import com.mariuszilinskas.vsp.contentservice.dto.MediaSearchQuery;
-import com.mariuszilinskas.vsp.contentservice.enums.Tag;
+import com.mariuszilinskas.vsp.media.catalog.dto.MediaSearchQuery;
+import com.mariuszilinskas.vsp.media.catalog.enums.Tag;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

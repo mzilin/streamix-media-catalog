@@ -1,8 +1,8 @@
-package com.mariuszilinskas.vsp.contentservice.controller;
+package com.mariuszilinskas.vsp.media.catalog.controller;
 
-import com.mariuszilinskas.vsp.contentservice.dto.*;
-import com.mariuszilinskas.vsp.contentservice.model.document.*;
-import com.mariuszilinskas.vsp.contentservice.service.MediaAdminService;
+import com.mariuszilinskas.vsp.media.catalog.dto.*;
+import com.mariuszilinskas.vsp.media.catalog.model.document.*;
+import com.mariuszilinskas.vsp.media.catalog.service.MediaAdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;

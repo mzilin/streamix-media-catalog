@@ -1,4 +1,4 @@
-package com.mariuszilinskas.vsp.contentservice.exception;
+package com.mariuszilinskas.vsp.media.catalog.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 

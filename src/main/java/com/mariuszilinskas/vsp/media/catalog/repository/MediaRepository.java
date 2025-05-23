@@ -1,6 +1,6 @@
-package com.mariuszilinskas.vsp.contentservice.repository;
+package com.mariuszilinskas.vsp.media.catalog.repository;
 
-import com.mariuszilinskas.vsp.contentservice.model.document.Media;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Media;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

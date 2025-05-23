@@ -1,9 +1,9 @@
-package com.mariuszilinskas.vsp.contentservice.service;
+package com.mariuszilinskas.vsp.media.catalog.service;
 
-import com.mariuszilinskas.vsp.contentservice.dto.PersonRequest;
-import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
-import com.mariuszilinskas.vsp.contentservice.model.document.Person;
-import com.mariuszilinskas.vsp.contentservice.repository.PersonRepository;
+import com.mariuszilinskas.vsp.media.catalog.dto.PersonRequest;
+import com.mariuszilinskas.vsp.media.catalog.exception.ResourceNotFoundException;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Person;
+import com.mariuszilinskas.vsp.media.catalog.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

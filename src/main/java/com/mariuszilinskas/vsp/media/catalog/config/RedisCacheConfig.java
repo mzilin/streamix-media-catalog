@@ -1,4 +1,4 @@
-package com.mariuszilinskas.vsp.contentservice.config;
+package com.mariuszilinskas.vsp.media.catalog.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

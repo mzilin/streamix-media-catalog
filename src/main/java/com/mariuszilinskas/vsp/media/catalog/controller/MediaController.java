@@ -1,7 +1,7 @@
-package com.mariuszilinskas.vsp.contentservice.controller;
+package com.mariuszilinskas.vsp.media.catalog.controller;
 
-import com.mariuszilinskas.vsp.contentservice.model.document.Media;
-import com.mariuszilinskas.vsp.contentservice.service.MediaService;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Media;
+import com.mariuszilinskas.vsp.media.catalog.service.MediaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;

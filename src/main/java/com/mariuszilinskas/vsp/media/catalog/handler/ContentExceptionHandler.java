@@ -1,10 +1,10 @@
-package com.mariuszilinskas.vsp.contentservice.handler;
+package com.mariuszilinskas.vsp.media.catalog.handler;
 
 
-import com.mariuszilinskas.vsp.contentservice.dto.ErrorResponse;
-import com.mariuszilinskas.vsp.contentservice.dto.FieldErrorResponse;
-import com.mariuszilinskas.vsp.contentservice.exception.EntityExistsException;
-import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
+import com.mariuszilinskas.vsp.media.catalog.dto.ErrorResponse;
+import com.mariuszilinskas.vsp.media.catalog.dto.FieldErrorResponse;
+import com.mariuszilinskas.vsp.media.catalog.exception.EntityExistsException;
+import com.mariuszilinskas.vsp.media.catalog.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

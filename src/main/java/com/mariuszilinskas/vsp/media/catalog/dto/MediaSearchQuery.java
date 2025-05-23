@@ -1,7 +1,7 @@
-package com.mariuszilinskas.vsp.contentservice.dto;
+package com.mariuszilinskas.vsp.media.catalog.dto;
 
-import com.mariuszilinskas.vsp.contentservice.enums.ContentType;
-import com.mariuszilinskas.vsp.contentservice.enums.Genre;
+import com.mariuszilinskas.vsp.media.catalog.enums.ContentType;
+import com.mariuszilinskas.vsp.media.catalog.enums.Genre;
 import jakarta.validation.constraints.*;
 import lombok.*;
 

@@ -1,9 +1,9 @@
-package com.mariuszilinskas.vsp.contentservice.dto;
+package com.mariuszilinskas.vsp.media.catalog.dto;
 
-import com.mariuszilinskas.vsp.contentservice.enums.Genre;
-import com.mariuszilinskas.vsp.contentservice.enums.Tag;
-import com.mariuszilinskas.vsp.contentservice.model.embedded.CastMember;
-import com.mariuszilinskas.vsp.contentservice.model.embedded.CrewMember;
+import com.mariuszilinskas.vsp.media.catalog.enums.Genre;
+import com.mariuszilinskas.vsp.media.catalog.enums.Tag;
+import com.mariuszilinskas.vsp.media.catalog.model.embedded.CastMember;
+import com.mariuszilinskas.vsp.media.catalog.model.embedded.CrewMember;
 
 import java.time.LocalDate;
 import java.util.List;

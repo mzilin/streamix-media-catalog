@@ -1,7 +1,7 @@
-package com.mariuszilinskas.vsp.contentservice.dto;
+package com.mariuszilinskas.vsp.media.catalog.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.mariuszilinskas.vsp.contentservice.util.ContentUtils;
+import com.mariuszilinskas.vsp.media.catalog.util.CatalogUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 @Setter
 public class FieldErrorResponse {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ContentUtils.TIMESTAMP_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CatalogUtils.TIMESTAMP_FORMAT)
     private ZonedDateTime timestamp;
     private final int status;
     private final String error;

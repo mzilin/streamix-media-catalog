@@ -1,7 +1,7 @@
-package com.mariuszilinskas.vsp.contentservice.service;
+package com.mariuszilinskas.vsp.media.catalog.service;
 
-import com.mariuszilinskas.vsp.contentservice.model.document.Media;
-import com.mariuszilinskas.vsp.contentservice.repository.MediaRepository;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Media;
+import com.mariuszilinskas.vsp.media.catalog.repository.MediaRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

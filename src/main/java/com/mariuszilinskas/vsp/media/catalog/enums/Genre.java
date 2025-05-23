@@ -1,4 +1,4 @@
-package com.mariuszilinskas.vsp.contentservice.enums;
+package com.mariuszilinskas.vsp.media.catalog.enums;
 
 public enum Genre {
     DRAMA,

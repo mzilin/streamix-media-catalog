@@ -1,8 +1,8 @@
-package com.mariuszilinskas.vsp.contentservice.util;
+package com.mariuszilinskas.vsp.media.catalog.util;
 
-public abstract class ContentUtils {
+public abstract class CatalogUtils {
 
-    private ContentUtils() {
+    private CatalogUtils() {
         // Private constructor to prevent instantiation
     }
 

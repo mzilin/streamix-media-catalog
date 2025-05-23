@@ -1,8 +1,8 @@
-package com.mariuszilinskas.vsp.contentservice.controller;
+package com.mariuszilinskas.vsp.media.catalog.controller;
 
-import com.mariuszilinskas.vsp.contentservice.dto.TrailerRequest;
-import com.mariuszilinskas.vsp.contentservice.model.document.Trailer;
-import com.mariuszilinskas.vsp.contentservice.service.TrailerAdminService;
+import com.mariuszilinskas.vsp.media.catalog.dto.TrailerRequest;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Trailer;
+import com.mariuszilinskas.vsp.media.catalog.service.TrailerAdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.mariuszilinskas.vsp.contentservice.exception;
+package com.mariuszilinskas.vsp.media.catalog.exception;
 
 /**
  * This class represents a custom exception to be thrown when an attempt is made

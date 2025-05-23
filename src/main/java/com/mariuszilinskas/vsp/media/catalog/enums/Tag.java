@@ -1,6 +1,6 @@
-package com.mariuszilinskas.vsp.contentservice.enums;
+package com.mariuszilinskas.vsp.media.catalog.enums;
 
-import com.mariuszilinskas.vsp.contentservice.util.ContentUtils;
+import com.mariuszilinskas.vsp.media.catalog.util.CatalogUtils;
 
 public enum Tag {
     FEATURED,
@@ -26,6 +26,6 @@ public enum Tag {
 
     @Override
     public String toString() {
-        return ContentUtils.convertEnumToString(this);
+        return CatalogUtils.convertEnumToString(this);
     }
 }

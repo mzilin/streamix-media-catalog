@@ -1,4 +1,4 @@
-package com.mariuszilinskas.vsp.contentservice.model.embedded;
+package com.mariuszilinskas.vsp.media.catalog.model.embedded;
 
 import lombok.Getter;
 import lombok.Setter;

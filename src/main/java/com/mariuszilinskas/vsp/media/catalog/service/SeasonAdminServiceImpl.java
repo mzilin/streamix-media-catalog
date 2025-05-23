@@ -1,10 +1,10 @@
-package com.mariuszilinskas.vsp.contentservice.service;
+package com.mariuszilinskas.vsp.media.catalog.service;
 
-import com.mariuszilinskas.vsp.contentservice.dto.SeasonRequest;
-import com.mariuszilinskas.vsp.contentservice.exception.EntityExistsException;
-import com.mariuszilinskas.vsp.contentservice.exception.ResourceNotFoundException;
-import com.mariuszilinskas.vsp.contentservice.model.document.Season;
-import com.mariuszilinskas.vsp.contentservice.repository.SeasonRepository;
+import com.mariuszilinskas.vsp.media.catalog.dto.SeasonRequest;
+import com.mariuszilinskas.vsp.media.catalog.exception.EntityExistsException;
+import com.mariuszilinskas.vsp.media.catalog.exception.ResourceNotFoundException;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Season;
+import com.mariuszilinskas.vsp.media.catalog.repository.SeasonRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

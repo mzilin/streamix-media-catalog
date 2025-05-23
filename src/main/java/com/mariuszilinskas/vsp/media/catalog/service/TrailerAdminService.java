@@ -1,7 +1,7 @@
-package com.mariuszilinskas.vsp.contentservice.service;
+package com.mariuszilinskas.vsp.media.catalog.service;
 
-import com.mariuszilinskas.vsp.contentservice.dto.TrailerRequest;
-import com.mariuszilinskas.vsp.contentservice.model.document.Trailer;
+import com.mariuszilinskas.vsp.media.catalog.dto.TrailerRequest;
+import com.mariuszilinskas.vsp.media.catalog.model.document.Trailer;
 
 public interface TrailerAdminService {
 
