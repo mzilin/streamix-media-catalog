@@ -1,0 +1,69 @@
+# Server properties
+server:
+  port: 8095
+
+# Information for the info endpoint
+info:
+  app:
+    environment: DEV
+    name: Content Management Service
+    description: Content Management Service Local Instance
+
+# Spring application properties
+spring:
+  application:
+    name: content
+  profiles:
+    active: dev
+  config:
+    import:
+      - optional:configserver:${CONFIG_SERVER_URL}
+      - optional:file:./env.properties
+  data:
+    mongodb:
+      uri: ${MONGO_DB_URI}
+    redis:
+      host: ${localhost}
+      port: ${REDIS_PORT}
+  rabbitmq:
+    host: ${RMQ_HOST}
+    port: ${RMQ_PORT}
+    username: ${RMQ_USERNAME}
+    password: ${RMQ_PASSWORD}
+  cache:
+    type: redis
+    redis:
+      time-to-live: 43200000   # 12 hours in milliseconds
+
+# Eureka configuration
+eureka:
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_DEFAULT_ZONE}
+  instance:
+    preferIpAddress: true
+
+# RabbitMQ settings
+rabbitmq:
+  exchange: ${RMQ_EXCHANGE}
+  routing-keys:
+    add-update-content: ${RMQ_ADD_UPDATE_CONTENT_RK}
+    delete-content: ${RMQ_DELETE_CONTENT_RK}
+
+# Management properties
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info, health, refresh
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
