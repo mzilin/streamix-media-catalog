@@ -29,6 +29,8 @@ public class MediaAdminServiceImpl implements MediaAdminService {
     private static final Logger logger = LoggerFactory.getLogger(MediaAdminServiceImpl.class);
     private final MediaRepository mediaRepository;
     private final SeasonAdminService seasonAdminService;
+    private final EpisodeAdminService episodeAdminService;
+    private final TrailerAdminService trailerAdminService;
 
     @Override
     @Transactional
@@ -71,9 +73,10 @@ public class MediaAdminServiceImpl implements MediaAdminService {
 
     @Override
     @Transactional
-    public void removeMovieById(String mediaId) {
-        logger.info("Removing Movie [id: '{}']", mediaId);
+    public void deleteMovieById(String mediaId) {
+        logger.info("Deleting Movie [id: '{}']", mediaId);
         mediaRepository.deleteById(mediaId);
+        trailerAdminService.deleteAllTrailersByMediaId(mediaId);
 
         // TODO: rabbitMQ send request to search service
     }
@@ -110,17 +113,6 @@ public class MediaAdminServiceImpl implements MediaAdminService {
         return series;
     }
 
-    @Override
-    @Transactional
-    public Series updateSeriesSeasonCount(String mediaId, int seasonCount) {
-        logger.info("Updating Series [id: '{}'] season count to: '{}'", mediaId, seasonCount);
-
-        Series series = (Series) findMediaById(mediaId);
-        series.setSeasonCount(seasonCount);
-
-        return mediaRepository.save(series);
-    }
-
     private Series applySeriesUpdates(Series series, SeriesRequest request) {
         applyCommonMediaUpdates(series, request.commonMediaAttributes());
         series.setCreators(request.creators());
@@ -144,10 +136,12 @@ public class MediaAdminServiceImpl implements MediaAdminService {
 
     @Override
     @Transactional
-    public void removeSeriesById(String mediaId) {
-        logger.info("Removing Series [id: '{}']", mediaId);
+    public void deleteSeriesById(String mediaId) {
+        logger.info("Deleting Series [id: '{}']", mediaId);
+        episodeAdminService.deleteAllEpisodesFromSeries(mediaId);
+        seasonAdminService.deleteAllSeasonsFromSeries(mediaId);
+        trailerAdminService.deleteAllTrailersByMediaId(mediaId);
         mediaRepository.deleteById(mediaId);
-        seasonAdminService.removeAllSeasonsFromSeries(mediaId);
 
         // TODO: rabbitMQ send request to search service
     }

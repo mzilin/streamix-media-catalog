@@ -88,6 +88,29 @@ public class TrailerAdminControllerTest {
         verify(trailerAdminService, times(1)).createTrailer(mediaId, trailerRequest);
     }
 
+//    @Test
+//    void testCreateTrailerE2E() throws Exception {
+//        // Arrange: Seed test database with any preconditions (optional).
+//
+//        // Act: Send a POST request to the endpoint.
+//        mockMvc.perform(MockMvcRequestBuilders.post(BASE_URL + mediaId)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(asJsonString(trailerRequest)))
+//                // Assert: Validate the response status and content.
+//                .andExpect(status().isCreated())
+//                .andExpect(jsonPath("$.id").isNotEmpty());
+////                .andExpect(jsonPath("$.mediaId").value(mediaId))
+////                .andExpect(jsonPath("$.title").value(trailer.getTitle()))
+////                .andExpect(jsonPath("$.description").value(trailer.getDescription()))
+////                .andExpect(jsonPath("$.duration").value(trailer.getDuration()))
+////                .andExpect(jsonPath("$.thumbnail").value(trailer.getThumbnail()))
+////                .andExpect(jsonPath("$.contentUrl").value(trailer.getContentUrl()));
+//
+//        // Optionally: Verify database changes if using an in-memory or real test database.
+//        // e.g., assert that the trailer was saved.
+//    }
+
+
     // ------------------------------------
 
     @Test
