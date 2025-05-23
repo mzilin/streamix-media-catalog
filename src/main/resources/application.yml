@@ -1,18 +1,18 @@
 # Server properties
 server:
-  port: 8095
+  port: 8120
 
 # Information for the info endpoint
 info:
   app:
     environment: DEV
-    name: Content Management Service
-    description: Content Management Service Local Instance
+    name: catalog-service
+    description: Catalog Service - Local Instance
 
 # Spring application properties
 spring:
   application:
-    name: content
+    name: catalog-service
   profiles:
     active: dev
   config:
