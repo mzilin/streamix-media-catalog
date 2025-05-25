@@ -1,0 +1,30 @@
+# Spring application properties for CI
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/ci-dummy
+    redis:
+      host: localhost
+      port: 6379
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cache:
+    type: redis
+    redis:
+      time-to-live: 43200000   # 12 hours in milliseconds
+
+# Eureka configuration for CI
+eureka:
+  client:
+    fetchRegistry: false
+    registerWithEureka: false
+
+# RabbitMQ settings for CI
+rabbitmq:
+  exchange: dummy-exchange
+  routing-keys:
+    add-update-content: dummy-key
+    delete-content: dummy-key

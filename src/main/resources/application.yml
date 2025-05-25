@@ -23,7 +23,7 @@ spring:
     mongodb:
       uri: ${MONGO_DB_URI}
     redis:
-      host: ${localhost}
+      host: ${REDIS_HOST}
       port: ${REDIS_PORT}
   rabbitmq:
     host: ${RMQ_HOST}
