@@ -6,13 +6,13 @@ server:
 info:
   app:
     environment: DEV
-    name: catalog-service
+    name: ${spring.application.name}
     description: Catalog Service - Local Instance
 
 # Spring application properties
 spring:
   application:
-    name: catalog-service
+    name: media-catalog
   profiles:
     active: dev
   config:
