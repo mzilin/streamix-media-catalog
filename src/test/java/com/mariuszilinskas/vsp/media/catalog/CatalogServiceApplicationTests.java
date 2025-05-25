@@ -1,11 +1,11 @@
-package com.mariuszilinskas.vsp.contentservice;
+package com.mariuszilinskas.vsp.media.catalog;
 
-import com.mariuszilinskas.vsp.contentservice.config.RabbitMQConfig;
-import com.mariuszilinskas.vsp.contentservice.config.RedisCacheConfig;
-import com.mariuszilinskas.vsp.contentservice.controller.*;
-import com.mariuszilinskas.vsp.contentservice.producer.RabbitMQProducer;
-import com.mariuszilinskas.vsp.contentservice.repository.*;
-import com.mariuszilinskas.vsp.contentservice.service.*;
+import com.mariuszilinskas.vsp.media.catalog.config.RabbitMQConfig;
+import com.mariuszilinskas.vsp.media.catalog.config.RedisCacheConfig;
+import com.mariuszilinskas.vsp.media.catalog.controller.*;
+import com.mariuszilinskas.vsp.media.catalog.producer.RabbitMQProducer;
+import com.mariuszilinskas.vsp.media.catalog.repository.*;
+import com.mariuszilinskas.vsp.media.catalog.service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

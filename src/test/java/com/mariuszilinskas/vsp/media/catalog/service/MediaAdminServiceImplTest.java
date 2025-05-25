@@ -1,4 +1,4 @@
-package com.mariuszilinskas.vsp.contentservice.service;
+package com.mariuszilinskas.vsp.media.catalog.service;
 
 public class MediaAdminServiceImplTest {
 }

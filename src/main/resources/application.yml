@@ -1,29 +1,29 @@
 # Server properties
 server:
-  port: 8095
+  port: 8120
 
 # Information for the info endpoint
 info:
   app:
     environment: DEV
-    name: Content Management Service
-    description: Content Management Service Local Instance
+    name: ${spring.application.name}
+    description: Catalog Service - Local Instance
 
 # Spring application properties
 spring:
   application:
-    name: content
+    name: media-catalog
   profiles:
     active: dev
   config:
     import:
-      - optional:configserver:${CONFIG_SERVER_URL}
+      - optional:configserver:discovery://config-server
       - optional:file:./env.properties
   data:
     mongodb:
       uri: ${MONGO_DB_URI}
     redis:
-      host: ${localhost}
+      host: ${REDIS_HOST}
       port: ${REDIS_PORT}
   rabbitmq:
     host: ${RMQ_HOST}
@@ -66,4 +66,4 @@ logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
-    org.springframework.security: DEBUG
+    com.mariuszilinskas.vsp: DEBUG
