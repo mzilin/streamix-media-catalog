@@ -1,0 +1,22 @@
+name: Test
+
+on:
+  pull_request:
+    branches: [ main, prod ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java with Gradle cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Run tests with Gradle
+        run: ./gradlew clean test --no-daemon
