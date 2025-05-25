@@ -19,7 +19,7 @@ jobs:
           cache: 'gradle'
 
       - name: Generate coverage
-        run: ./gradlew test jacocoTestReport --no-daemon
+        run: SPRING_PROFILES_ACTIVE=ci ./gradlew test jacocoTestReport --no-daemon
 
       - name: Upload to Codecov
         uses: codecov/codecov-action@v4

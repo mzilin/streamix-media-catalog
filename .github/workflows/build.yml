@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, prod ]
   pull_request:
-    branches: [ prod ]
+    branches: [ main, prod ]
 
 jobs:
   build:
@@ -21,4 +21,4 @@ jobs:
           cache: 'gradle'
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: SPRING_PROFILES_ACTIVE=ci ./gradlew build --no-daemon
