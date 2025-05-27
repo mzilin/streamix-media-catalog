@@ -2,14 +2,23 @@ name: Codecov
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths-ignore:
+      - 'iac/**'
+      - '**/*.md'
+      - '**/*.txt'
+      - 'docs/**'
+      - '.github/**'
+      - '**/*.yml'
 
 jobs:
   upload-coverage:
     runs-on: ubuntu-latest
+    name: "Upload Coverage Report"
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Java with Gradle cache
         uses: actions/setup-java@v4
@@ -18,10 +27,10 @@ jobs:
           java-version: '21'
           cache: 'gradle'
 
-      - name: Generate coverage
+      - name: Run tests and generate coverage
         run: SPRING_PROFILES_ACTIVE=ci ./gradlew test jacocoTestReport --no-daemon
 
-      - name: Upload to Codecov
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
