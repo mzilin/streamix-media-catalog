@@ -1,100 +1,172 @@
-# Video Streaming Platform - Content Management Service
+# Video Streaming Platform – Catalog Service
+
+![Build](https://img.shields.io/github/actions/workflow/status/mzilin/vsp-media-catalog/build.yml?label=Build&logo=github&logoColor=white&style=flat)
+![Coverage](https://img.shields.io/codecov/c/github/mzilin/vsp-media-catalog?label=Coverage&logo=codecov&logoColor=white&style=flat)
+![Status](https://img.shields.io/badge/status-in_progress-yellow?label=Status)
+
+
+This repository contains the **Catalog Service** microservice for the **Video Streaming Platform**, deployed in the **Media** cluster. It is responsible for content creation, updates, retrieval and deletion.
+
+For a complete system overview and links to all microservices, please refer to the [Microservices Hub Repository](https://github.com/mzilin/vsp-microservices-hub).
+
+
+## Table of Contents
+
+* [Introduction](#introduction)
+* [Technology Stack](#technology-stack)
+* [Dependencies](#dependencies)
+* [Setting Up Your Environment](#setting-up-your-environment)
+  * [Prerequisites](#prerequisites)
+  * [Installation & Running](#installation--running)
+  * [Environment Variables](#environment-variables)
+* [Testing](#testing)
+* [Endpoints](#endpoints)
+* [CI/CD & Deployment](#cicd--deployment)
+* [Future Improvements](#future-improvements)
+* [License](#license)
+* [Contact](#contact)
 
 
 ## Introduction
 
-The `Content Service` is an integral component of the `Video Streaming Platform`, responsible for content creation, updates, retrieval and deletion.
+The **Catalog Service** is a core component of the **Video Streaming Platform**, dedicated to managing the platform’s media catalog. It handles key responsibilities such as:
 
-Built with Spring Boot, this microservice uses MongoDB as its database, providing a robust and scalable solution for data storage and manipulation.
+- **Content Creation**: Enables admins and content teams to add new media assets, including metadata like titles, descriptions and categories.
+- **Content Updates**: Supports modifications to existing content records, ensuring up-to-date and accurate information.
+- **Content Retrieval**: Provides APIs for retrieving media details for display in client applications and other services.
+- **Content Deletion**: Facilitates secure and compliant removal of media content, maintaining data integrity and consistency.
 
-
-## Technologies Used
-This microservice utilises a comprehensive suite of technologies and dependencies, ensuring robust and scalable functionality:
-
-- **Spring Boot** `3.2.5`:
-  - **Actuator**: Monitors and manages the application, providing insights into runtime operations and health.
-  - **RabbitMQ (AMQP)**: Facilitates robust, asynchronous message communication between microservices, enhancing scalability and decoupling components.
-  - **Cache**: Implements caching using Redis to enhance performance and reduce database load.
-  - **Data Redis**: Integrates with Redis for caching and other data storage needs.
-  - **Data MongoDB**: Simplifies access to MongoDB, allowing storage and retrieval of NoSQL data.
-  - **Validation**: Ensures that incoming data meets the application's expectations, crucial for maintaining data integrity and proper functioning.
-  - **Web**: Enables building web-based applications and services, supporting RESTful endpoints and traditional MVC setups.
-
-- **Spring Cloud** `2023.0.1`:
-  - **Config**: Manages externalised configuration, allowing applications to fetch their settings from a centralized source.
-  - **Netflix Eureka Client**: Enables the microservice to register with a Eureka server for service discovery.
-
-- **Java** `JDK 17`: Essential for secure, portable, high-performance software development.
-
-- **Lombok**: Reduces boilerplate in Java code significantly, automating the generation of getters, setters, constructors, and other common methods.
-
-- **Testing**:
-  - **Mockito Core** `5.3.1`: Provides essential mocking capabilities for unit testing, thereby facilitating thorough and effective test cases.
+By centralising content management, the **Catalog Service** ensures a consistent and high-quality user experience, enabling users to browse and discover media efficiently.
 
 
-### Dependency Management
+## Technology Stack
 
-- **Gradle**: A powerful build automation tool that streamlines the compilation, testing, and deployment processes for software projects.
+This service is built using a modern, cloud-native Java stack, optimised for reactive, scalable microservices:
 
-
-### Containerization
-
-- **Docker** (Optional): Automates OS-level virtualization on Windows and Linux.
-
-
-## Requirements
-
-To successfully set up and run the application, ensure you have the following installed:
-
-- [Java JDK 17](https://www.oracle.com/uk/java/technologies/downloads/#java17)
-- [Gradle](https://gradle.org/)
-- [Docker](https://docs.docker.com/get-docker/) (optional)
-
-Ensure that PostgreSQL is correctly set up and running, as it is required for the data storage.
+- **Java** `21`: LTS version with enhanced performance and modern language features.
+- **Spring Boot** `3.4.5`: Rapid development framework for standalone, production-ready Java apps.
+- **Spring Cloud** `2024.0.0`: Provides essential microservice components like config management, service discovery and API routing.
+- **Gradle** `8.14`: Powerful build tool with fast incremental builds and powerful dependency management.
+- **Docker**: Containerises apps for consistent, portable development and deployment.
 
 
-## Installation
+## Dependencies
 
-Follow these steps to get the User Service up and running:
+This project relies on a set of key libraries and frameworks that support its core functionality, infrastructure and testing:
 
-1. Navigate into the app's directory
-```shell
-cd vsp-content-service
-```
+- **Spring Boot**
+  - **Actuator**: Exposes app health, metrics, and monitoring endpoints.
+  - **RabbitMQ (AMQP)**: Facilitates robust, asynchronous messaging between microservices, enhancing scalability and decoupling.
+  - **Cache**: Implements caching with Redis to improve performance and reduce database load.
+  - **Data Redis**: Provides seamless integration with Redis for caching and data storage needs.
+  - **Data MongoDB**: Simplifies integration with MongoDB, enabling efficient storage and retrieval of NoSQL data.
+  - **Validation**: Provides declarative validation using JSR-380 annotations.
+  - **Web**: Supports building RESTful endpoints and traditional MVC-based web applications.
 
-2. Clean and build the microservice
+- **Spring Cloud**
+  - **Config Client**: Integrates with a centralised Spring Cloud Config Server for dynamic configuration management.
+  - **Netflix Eureka Client**: Integrates with the Eureka Server for service registration and discovery.
 
-```shell
-./gradlew clean build
-```
+- **Developer Experience**
+  - **Lombok**: Reduces boilerplate with annotations for getters, setters, and constructors.
+  - **DevTools**: Enables hot reloading for faster development iterations.
 
-3. Start the microservice
+- **Testing**
+  - **JUnit**: Framework for writing and running unit and integration tests in Java.
+  - **Mockito**: Allows mocking and stubbing dependencies to isolate components during testing.
 
-```shell
-./gradlew bootRun
-```
+- **Code Quality**
+  - **Jacoco**: Generates code coverage reports for ensuring test completeness.
+
+
+## Setting Up Your Environment
+
+Follow the steps below to set up your local development environment and run the application.
+
+
+### Prerequisites
+
+Ensure you have the following installed on your machine:
+- [Java JDK 21](https://www.oracle.com/uk/java/technologies/downloads/#java21)
+- [Gradle 8.14](https://gradle.org/)
+- [Docker](https://docs.docker.com/get-started/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/)
+
+
+### Installation & Running
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/mzilin/vsp-media-catalog.git
+    ```
+
+2. Switch to the `main` branch:
+    ```bash
+    cd vsp-media-catalog
+    ```
+
+3. Build the project and run tests:
+    ```bash
+    ./gradlew clean build
+    ```
+
+4. Start the service:
+    ```bash
+    ./gradlew bootRun
+    ```
+
+   The service will start on http://localhost:8120 using the embedded Tomcat web server.
+
+
+### Environment Variables
+
+This microservice requires the following environment variable to be configured:
+
+TBC
 
 
 ## Testing
 
-Ensure the application is working as expected by executing the unit tests:
+This project uses a combination of **unit tests** and **integration tests** to ensure reliability, correctness and maintainability.
 
-```shell
-./gradlew clean test
+To execute all tests, run:
+```bash
+./gradlew test
 ```
+
+This setup ensures that changes can be safely verified and that the codebase remains robust, maintainable and well-documented.
+
+
+## Endpoints
+
+TBC
+
+
+## CI/CD & Deployment
+
+This project uses **GitHub Actions** to automate the build, test and deployment processes, ensuring continuous integration and delivery.
+
+- The **Build** workflow runs on every push and pull request to the `main` and `prod` branches. This step verifies that all commits compile successfully and pass unit tests before they are merged, maintaining code quality.
+- The **Codecov** workflow runs on pushes to the main branch, where it executes tests, generates a Jacoco coverage report and uploads the results to Codecov.
+- Finally, a **Deploy** workflow is triggered when a pull request is merged into the `prod` branch. It builds a Docker image of the microservice, pushes it to the **AWS ECR** container registry and deploys it to the **AWS ECS** environment.
+
+Branch protections and **GitHub Secrets** are used to manage credentials and safeguard the CI/CD pipelines.
+
+
+## Future Improvements
+
+TBC
 
 
 ## License
 
-This project is private and proprietary. Unauthorised copying, modification, distribution, or use of this software, via any medium, is strictly prohibited without explicit permission from the owner.
+This project is private and proprietary. Unauthorised copying, modification, distribution or use of this software, via any medium, is strictly prohibited without explicit written permission from the owner.
 
 
 ## Contact
 
-For any questions or clarifications about the project, please reach out to the project owner via [www.mariuszilinskas.com](https://www.mariuszilinskas.com).
+For any questions or clarifications about the project, please [reach out](https://www.mariuszilinskas.com/contact) to the project owner.
 
-Marius Zilinskas
 
 ------
-
-###### All rights are reserved. - Marius Zilinskas, 2024 to present
+###### © 2024–present Marius Zilinskas. All rights reserved.
