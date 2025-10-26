@@ -1,13 +1,13 @@
-# Video Streaming Platform – Catalog Service
+# Streamix – Catalog Service
 
-![Build](https://img.shields.io/github/actions/workflow/status/mzilin/vsp-media-catalog/build.yml?label=Build&logo=github&logoColor=white&style=flat)
-![Coverage](https://img.shields.io/codecov/c/github/mzilin/vsp-media-catalog?label=Coverage&logo=codecov&logoColor=white&style=flat)
+![Build](https://img.shields.io/github/actions/workflow/status/mzilin/streamix-media-catalog/build.yml?label=Build&logo=github&logoColor=white&style=flat)
+![Coverage](https://img.shields.io/codecov/c/github/mzilin/streamix-media-catalog?label=Coverage&logo=codecov&logoColor=white&style=flat)
 ![Status](https://img.shields.io/badge/status-in_progress-yellow?label=Status)
 
 
-This repository contains the **Catalog Service** microservice for the **Video Streaming Platform**, deployed in the **Media** cluster. It is responsible for content creation, updates, retrieval and deletion.
+This repository contains the **Catalog Service** microservice for the **Streamix** (Video Streaming Platform), deployed in the **Media** cluster. It is responsible for content creation, updates, retrieval and deletion.
 
-For a complete system overview and links to all microservices, please refer to the [Microservices Hub Repository](https://github.com/mzilin/vsp-microservices-hub).
+For a complete system overview and links to all microservices, please refer to the [Microservices Hub Repository](https://github.com/mzilin/streamix-microservices-hub).
 
 
 ## Table of Contents
@@ -97,12 +97,12 @@ Ensure you have the following installed on your machine:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/mzilin/vsp-media-catalog.git
+    git clone https://github.com/mzilin/streamix-media-catalog.git
     ```
 
 2. Switch to the `main` branch:
     ```bash
-    cd vsp-media-catalog
+    cd streamix-media-catalog
     ```
 
 3. Build the project and run tests:
