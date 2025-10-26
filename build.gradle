@@ -5,7 +5,7 @@ plugins {
 	id 'jacoco'
 }
 
-group = 'com.mariuszilinskas.vsp'
+group = 'com.mariuszilinskas.streamix'
 version = '1.0.1'
 
 java {
