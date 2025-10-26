@@ -66,4 +66,4 @@ logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
-    com.mariuszilinskas.vsp: DEBUG
+    com.mariuszilinskas.streamix: DEBUG
