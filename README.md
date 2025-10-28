@@ -5,7 +5,7 @@
 ![Status](https://img.shields.io/badge/status-in_progress-yellow?label=Status)
 
 
-This repository contains the **Catalog Service** microservice for the **Streamix** (Video Streaming Platform), deployed in the **Media** cluster. It is responsible for content creation, updates, retrieval and deletion.
+This repository contains the **Catalog Service** microservice for the **Streamix** (Video Streaming Platform), deployed in the **Media** cluster. It is responsible for content creation, updates, retrieval and deletion, as well as media uploads.
 
 For a complete system overview and links to all microservices, please refer to the [Microservices Hub Repository](https://github.com/mzilin/streamix-microservices-hub).
 
