@@ -5,7 +5,7 @@
 ![Status](https://img.shields.io/badge/status-in_progress-yellow?label=Status)
 
 
-This repository contains the **Catalog Service** microservice for the **Streamix** (Video Streaming Platform), deployed in the **Media** cluster. It is responsible for content creation, updates, retrieval and deletion.
+This repository contains the **Catalog Service** microservice for the **Streamix** (Video Streaming Platform), deployed in the **Media** cluster. It is responsible for content creation, updates, retrieval and deletion, as well as media uploads.
 
 For a complete system overview and links to all microservices, please refer to the [Microservices Hub Repository](https://github.com/mzilin/streamix-microservices-hub).
 
@@ -13,6 +13,7 @@ For a complete system overview and links to all microservices, please refer to t
 ## Table of Contents
 
 * [Introduction](#introduction)
+* [Media Upload Flow](#media-upload-flow)
 * [Technology Stack](#technology-stack)
 * [Dependencies](#dependencies)
 * [Setting Up Your Environment](#setting-up-your-environment)
@@ -32,11 +33,56 @@ For a complete system overview and links to all microservices, please refer to t
 The **Catalog Service** is a core component of the **Video Streaming Platform**, dedicated to managing the platform’s media catalog. It handles key responsibilities such as:
 
 - **Content Creation**: Enables admins and content teams to add new media assets, including metadata like titles, descriptions and categories.
+- **Media Upload Management**: Orchestrates secure, large-file uploads via pre-signed S3 URLs and integrates with downstream processing (e.g. transcoding).
 - **Content Updates**: Supports modifications to existing content records, ensuring up-to-date and accurate information.
 - **Content Retrieval**: Provides APIs for retrieving media details for display in client applications and other services.
 - **Content Deletion**: Facilitates secure and compliant removal of media content, maintaining data integrity and consistency.
 
 By centralising content management, the **Catalog Service** ensures a consistent and high-quality user experience, enabling users to browse and discover media efficiently.
+
+
+## Media Upload Flow
+
+This section illustrates how the Catalog Service enables secure media ingestion and orchestrates the automated processing pipeline. The flow below shows each step from metadata creation and multipart upload, through event-driven transcoding and publishing, to content indexing for discovery.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant Admin Tool (SPA)
+  participant Catalog Service
+  participant S3
+  participant SNS/SQS
+  participant Transcoder
+  participant Indexer
+
+  Admin Tool (SPA)-->>Catalog Service: Create Media Metadata
+  Catalog Service-->>Catalog Service: Generate media_id
+  Catalog Service-->>S3: Get Presigned Multipart Upload URLs
+  Catalog Service-->>Catalog Service: Save upload metadata
+  Catalog Service-->>Admin Tool (SPA): Return media_id & presigned URLs
+
+  par Parallel Upload
+    Admin Tool (SPA)-->>Admin Tool (SPA): Split file into parts
+    Admin Tool (SPA)-->>S3: Upload each part (with acceleration)
+  end
+
+  Admin Tool (SPA)-->>Catalog Service: Notify upload complete
+  Catalog Service-->>S3: Finalise Multipart Upload
+  Catalog Service-->>SNS/SQS: Publish media.uploaded event
+
+  SNS/SQS-->>Transcoder: Trigger on media.uploaded event
+  Transcoder-->>S3: Download uploaded media
+  Transcoder-->>Transcoder: Generate video variants (1080p, 720p, etc.)
+  Transcoder-->>SNS/SQS: Publish media.transcoded event
+
+  SNS/SQS-->>Catalog Service: Trigger on media.transcoded event
+  Catalog Service-->>Catalog Service: Update content with new video URLs and metadata
+  Catalog Service-->>Catalog Service: Mark content ready for discovery
+  Catalog Service-->>SNS/SQS: Publish media.published event
+
+  SNS/SQS-->>Indexer: Trigger on media.published event
+  Indexer-->>Indexer: Index content in Elasticsearch DB
+```
 
 
 ## Technology Stack
